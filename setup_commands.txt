@@ -2,7 +2,7 @@ catalyst.pl MimeCas
 cd MimeCas/
 
 script/mimecas_create.pl model Schema \
- DBIC::Schema Schema create=static dbi:mysql:mime_cas root ''
+ DBIC::Schema MimeCas::Schema create=static dbi:mysql:mime_cas root ''
 
 # regenerate:
 dbicdump -o dump_directory=./lib MimeCas::Schema \

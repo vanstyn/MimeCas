@@ -1,4 +1,4 @@
-package Schema::Result::MimeGraph;
+package MimeCas::Schema::Result::MimeHeader;
 
 # Created by DBIx::Class::Schema::Loader
 # DO NOT MODIFY THE FIRST PART OF THIS FILE
@@ -15,24 +15,18 @@ __PACKAGE__->load_components("InflateColumn::DateTime");
 
 =head1 NAME
 
-Schema::Result::MimeGraph
+MimeCas::Schema::Result::MimeHeader
 
 =cut
 
-__PACKAGE__->table("mime_graph");
+__PACKAGE__->table("mime_header");
 
 =head1 ACCESSORS
 
-=head2 child_sha1
+=head2 sha1
 
   data_type: 'char'
   is_foreign_key: 1
-  is_nullable: 0
-  size: 40
-
-=head2 parent_sha1
-
-  data_type: 'char'
   is_nullable: 0
   size: 40
 
@@ -43,13 +37,23 @@ __PACKAGE__->table("mime_graph");
   extra: {unsigned => 1}
   is_nullable: 0
 
+=head2 name
+
+  data_type: 'varchar'
+  is_nullable: 0
+  size: 255
+
+=head2 value
+
+  data_type: 'varchar'
+  is_nullable: 0
+  size: 1024
+
 =cut
 
 __PACKAGE__->add_columns(
-  "child_sha1",
+  "sha1",
   { data_type => "char", is_foreign_key => 1, is_nullable => 0, size => 40 },
-  "parent_sha1",
-  { data_type => "char", is_nullable => 0, size => 40 },
   "order",
   {
     data_type => "tinyint",
@@ -57,44 +61,33 @@ __PACKAGE__->add_columns(
     extra => { unsigned => 1 },
     is_nullable => 0,
   },
+  "name",
+  { data_type => "varchar", is_nullable => 0, size => 255 },
+  "value",
+  { data_type => "varchar", is_nullable => 0, size => 1024 },
 );
-__PACKAGE__->set_primary_key("child_sha1", "parent_sha1");
+__PACKAGE__->set_primary_key("sha1", "order");
 
 =head1 RELATIONS
 
-=head2 child_sha1
+=head2 sha1
 
 Type: belongs_to
 
-Related object: L<Schema::Result::MimeObject>
+Related object: L<MimeCas::Schema::Result::MimeObject>
 
 =cut
 
 __PACKAGE__->belongs_to(
-  "child_sha1",
-  "Schema::Result::MimeObject",
-  { sha1 => "child_sha1" },
-  { is_deferrable => 1, on_delete => "CASCADE", on_update => "CASCADE" },
-);
-
-=head2 child_sha1
-
-Type: belongs_to
-
-Related object: L<Schema::Result::MimeObject>
-
-=cut
-
-__PACKAGE__->belongs_to(
-  "child_sha1",
-  "Schema::Result::MimeObject",
-  { sha1 => "child_sha1" },
+  "sha1",
+  "MimeCas::Schema::Result::MimeObject",
+  { sha1 => "sha1" },
   { is_deferrable => 1, on_delete => "CASCADE", on_update => "CASCADE" },
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07010 @ 2013-05-18 23:54:43
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:64MM4lX8h6WKa+nvIseh8w
+# Created by DBIx::Class::Schema::Loader v0.07010 @ 2013-05-19 00:17:53
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:BW8Q5C6LK3V/gLtxYP1i3Q
 
 
 # You can replace this text with custom code or comments, and it will be preserved on regeneration

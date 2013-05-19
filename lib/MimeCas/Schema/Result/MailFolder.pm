@@ -1,4 +1,4 @@
-package Schema::Result::MailFolder;
+package MimeCas::Schema::Result::MailFolder;
 
 # Created by DBIx::Class::Schema::Loader
 # DO NOT MODIFY THE FIRST PART OF THIS FILE
@@ -15,7 +15,7 @@ __PACKAGE__->load_components("InflateColumn::DateTime");
 
 =head1 NAME
 
-Schema::Result::MailFolder
+MimeCas::Schema::Result::MailFolder
 
 =cut
 
@@ -100,13 +100,13 @@ __PACKAGE__->add_unique_constraint("mailbox_id", ["mailbox_id", "pid", "name"]);
 
 Type: belongs_to
 
-Related object: L<Schema::Result::MailFolder>
+Related object: L<MimeCas::Schema::Result::MailFolder>
 
 =cut
 
 __PACKAGE__->belongs_to(
   "pid",
-  "Schema::Result::MailFolder",
+  "MimeCas::Schema::Result::MailFolder",
   { id => "pid" },
   {
     is_deferrable => 1,
@@ -120,13 +120,13 @@ __PACKAGE__->belongs_to(
 
 Type: has_many
 
-Related object: L<Schema::Result::MailFolder>
+Related object: L<MimeCas::Schema::Result::MailFolder>
 
 =cut
 
 __PACKAGE__->has_many(
   "mail_folders",
-  "Schema::Result::MailFolder",
+  "MimeCas::Schema::Result::MailFolder",
   { "foreign.pid" => "self.id" },
   { cascade_copy => 0, cascade_delete => 0 },
 );
@@ -135,13 +135,13 @@ __PACKAGE__->has_many(
 
 Type: belongs_to
 
-Related object: L<Schema::Result::Mailbox>
+Related object: L<MimeCas::Schema::Result::Mailbox>
 
 =cut
 
 __PACKAGE__->belongs_to(
   "mailbox",
-  "Schema::Result::Mailbox",
+  "MimeCas::Schema::Result::Mailbox",
   { id => "mailbox_id" },
   { is_deferrable => 1, on_delete => "CASCADE", on_update => "CASCADE" },
 );
@@ -150,20 +150,20 @@ __PACKAGE__->belongs_to(
 
 Type: has_many
 
-Related object: L<Schema::Result::MailMessage>
+Related object: L<MimeCas::Schema::Result::MailMessage>
 
 =cut
 
 __PACKAGE__->has_many(
   "mail_messages",
-  "Schema::Result::MailMessage",
+  "MimeCas::Schema::Result::MailMessage",
   { "foreign.pid" => "self.id" },
   { cascade_copy => 0, cascade_delete => 0 },
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07010 @ 2013-05-18 23:54:43
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:NWKfDHEyM0o/7H7xz0fbVw
+# Created by DBIx::Class::Schema::Loader v0.07010 @ 2013-05-19 00:17:53
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:9bomDBHyUbbVrFmPbub35Q
 
 
 # You can replace this text with custom code or comments, and it will be preserved on regeneration

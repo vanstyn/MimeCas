@@ -1,4 +1,4 @@
-package Schema::Result::MimeAttribute;
+package MimeCas::Schema::Result::MimeAttribute;
 
 # Created by DBIx::Class::Schema::Loader
 # DO NOT MODIFY THE FIRST PART OF THIS FILE
@@ -15,7 +15,7 @@ __PACKAGE__->load_components("InflateColumn::DateTime");
 
 =head1 NAME
 
-Schema::Result::MimeAttribute
+MimeCas::Schema::Result::MimeAttribute
 
 =cut
 
@@ -102,20 +102,20 @@ __PACKAGE__->set_primary_key("sha1");
 
 Type: belongs_to
 
-Related object: L<Schema::Result::MimeObject>
+Related object: L<MimeCas::Schema::Result::MimeObject>
 
 =cut
 
 __PACKAGE__->belongs_to(
   "sha1",
-  "Schema::Result::MimeObject",
+  "MimeCas::Schema::Result::MimeObject",
   { sha1 => "sha1" },
   { is_deferrable => 1, on_delete => "CASCADE", on_update => "CASCADE" },
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07010 @ 2013-05-18 23:54:43
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:Pes8uYMN8sKMErHIKkYpGQ
+# Created by DBIx::Class::Schema::Loader v0.07010 @ 2013-05-19 00:17:53
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:jjQ4la8j4NGBI5kpQKPVHQ
 
 
 # You can replace this text with custom code or comments, and it will be preserved on regeneration

@@ -1,4 +1,4 @@
-package Schema::Result::MimeObject;
+package MimeCas::Schema::Result::MimeObject;
 
 # Created by DBIx::Class::Schema::Loader
 # DO NOT MODIFY THE FIRST PART OF THIS FILE
@@ -15,7 +15,7 @@ __PACKAGE__->load_components("InflateColumn::DateTime");
 
 =head1 NAME
 
-Schema::Result::MimeObject
+MimeCas::Schema::Result::MimeObject
 
 =cut
 
@@ -64,13 +64,13 @@ __PACKAGE__->set_primary_key("sha1");
 
 Type: has_many
 
-Related object: L<Schema::Result::MailMessage>
+Related object: L<MimeCas::Schema::Result::MailMessage>
 
 =cut
 
 __PACKAGE__->has_many(
   "mail_messages",
-  "Schema::Result::MailMessage",
+  "MimeCas::Schema::Result::MailMessage",
   { "foreign.sha1" => "self.sha1" },
   { cascade_copy => 0, cascade_delete => 0 },
 );
@@ -79,13 +79,13 @@ __PACKAGE__->has_many(
 
 Type: might_have
 
-Related object: L<Schema::Result::MimeAttribute>
+Related object: L<MimeCas::Schema::Result::MimeAttribute>
 
 =cut
 
 __PACKAGE__->might_have(
   "mime_attribute",
-  "Schema::Result::MimeAttribute",
+  "MimeCas::Schema::Result::MimeAttribute",
   { "foreign.sha1" => "self.sha1" },
   { cascade_copy => 0, cascade_delete => 0 },
 );
@@ -94,13 +94,13 @@ __PACKAGE__->might_have(
 
 Type: has_many
 
-Related object: L<Schema::Result::MimeGraph>
+Related object: L<MimeCas::Schema::Result::MimeGraph>
 
 =cut
 
 __PACKAGE__->has_many(
   "mime_graph_child_sha1s",
-  "Schema::Result::MimeGraph",
+  "MimeCas::Schema::Result::MimeGraph",
   { "foreign.child_sha1" => "self.sha1" },
   { cascade_copy => 0, cascade_delete => 0 },
 );
@@ -109,13 +109,13 @@ __PACKAGE__->has_many(
 
 Type: has_many
 
-Related object: L<Schema::Result::MimeGraph>
+Related object: L<MimeCas::Schema::Result::MimeGraph>
 
 =cut
 
 __PACKAGE__->has_many(
   "mime_graph_child_sha1s",
-  "Schema::Result::MimeGraph",
+  "MimeCas::Schema::Result::MimeGraph",
   { "foreign.child_sha1" => "self.sha1" },
   { cascade_copy => 0, cascade_delete => 0 },
 );
@@ -124,13 +124,13 @@ __PACKAGE__->has_many(
 
 Type: has_many
 
-Related object: L<Schema::Result::MimeHeader>
+Related object: L<MimeCas::Schema::Result::MimeHeader>
 
 =cut
 
 __PACKAGE__->has_many(
   "mime_headers",
-  "Schema::Result::MimeHeader",
+  "MimeCas::Schema::Result::MimeHeader",
   { "foreign.sha1" => "self.sha1" },
   { cascade_copy => 0, cascade_delete => 0 },
 );
@@ -139,20 +139,20 @@ __PACKAGE__->has_many(
 
 Type: has_many
 
-Related object: L<Schema::Result::MimeRecipient>
+Related object: L<MimeCas::Schema::Result::MimeRecipient>
 
 =cut
 
 __PACKAGE__->has_many(
   "mime_recipients",
-  "Schema::Result::MimeRecipient",
+  "MimeCas::Schema::Result::MimeRecipient",
   { "foreign.sha1" => "self.sha1" },
   { cascade_copy => 0, cascade_delete => 0 },
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07010 @ 2013-05-18 23:54:43
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:/MvXsyFPHckrxyaav3SC4w
+# Created by DBIx::Class::Schema::Loader v0.07010 @ 2013-05-19 00:17:53
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:BGsHtoqMk2M8/8834i2LwQ
 
 
 # You can replace this text with custom code or comments, and it will be preserved on regeneration
