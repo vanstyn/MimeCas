@@ -33,6 +33,7 @@ __PACKAGE__->table("mime_graph");
 =head2 parent_sha1
 
   data_type: 'char'
+  is_foreign_key: 1
   is_nullable: 0
   size: 40
 
@@ -49,7 +50,7 @@ __PACKAGE__->add_columns(
   "child_sha1",
   { data_type => "char", is_foreign_key => 1, is_nullable => 0, size => 40 },
   "parent_sha1",
-  { data_type => "char", is_nullable => 0, size => 40 },
+  { data_type => "char", is_foreign_key => 1, is_nullable => 0, size => 40 },
   "order",
   {
     data_type => "tinyint",
@@ -77,7 +78,7 @@ __PACKAGE__->belongs_to(
   { is_deferrable => 1, on_delete => "CASCADE", on_update => "CASCADE" },
 );
 
-=head2 child_sha1
+=head2 parent_sha1
 
 Type: belongs_to
 
@@ -86,15 +87,15 @@ Related object: L<MimeCas::Schema::Result::MimeObject>
 =cut
 
 __PACKAGE__->belongs_to(
-  "child_sha1",
+  "parent_sha1",
   "MimeCas::Schema::Result::MimeObject",
-  { sha1 => "child_sha1" },
+  { sha1 => "parent_sha1" },
   { is_deferrable => 1, on_delete => "CASCADE", on_update => "CASCADE" },
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07010 @ 2013-05-19 00:17:53
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:75Nh0VsBYz92nEuRwIF4hQ
+# Created by DBIx::Class::Schema::Loader v0.07010 @ 2013-05-19 02:09:24
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:O8L4T0I6dzXZc7WtRana3Q
 
 
 # You can replace this text with custom code or comments, and it will be preserved on regeneration

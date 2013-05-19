@@ -38,7 +38,7 @@ CREATE TABLE IF NOT EXISTS `mime_graph` (
   `order` tinyint unsigned NOT NULL DEFAULT 0,
   PRIMARY KEY  (`child_sha1`,`parent_sha1`),
   FOREIGN KEY (`child_sha1`) REFERENCES `mime_object` (`sha1`),
-  FOREIGN KEY (`child_sha1`) REFERENCES `mime_object` (`sha1`)
+  FOREIGN KEY (`parent_sha1`) REFERENCES `mime_object` (`sha1`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 

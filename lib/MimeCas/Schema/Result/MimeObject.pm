@@ -105,7 +105,7 @@ __PACKAGE__->has_many(
   { cascade_copy => 0, cascade_delete => 0 },
 );
 
-=head2 mime_graph_child_sha1s
+=head2 mime_graph_parent_sha1s
 
 Type: has_many
 
@@ -114,9 +114,9 @@ Related object: L<MimeCas::Schema::Result::MimeGraph>
 =cut
 
 __PACKAGE__->has_many(
-  "mime_graph_child_sha1s",
+  "mime_graph_parent_sha1s",
   "MimeCas::Schema::Result::MimeGraph",
-  { "foreign.child_sha1" => "self.sha1" },
+  { "foreign.parent_sha1" => "self.sha1" },
   { cascade_copy => 0, cascade_delete => 0 },
 );
 
@@ -151,8 +151,8 @@ __PACKAGE__->has_many(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07010 @ 2013-05-19 00:17:53
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:BGsHtoqMk2M8/8834i2LwQ
+# Created by DBIx::Class::Schema::Loader v0.07010 @ 2013-05-19 02:09:24
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:UAfGStESVOKMbD7IYO1Z0g
 
 
 # You can replace this text with custom code or comments, and it will be preserved on regeneration
