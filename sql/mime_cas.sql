@@ -15,6 +15,12 @@ CREATE TABLE IF NOT EXISTS `mime_object` (
   `sha1` char(40) NOT NULL,
   `content` longtext NOT NULL,
   
+  /* bool if the content was parsed as valid MIME */
+  `parsed` tinyint(1) NOT NULL DEFAULT 0,
+  
+  /* Email::MIME error message if it couldn't be parsed */
+  `parse_error` text DEFAULT NULL,
+  
   /* children is a cache column - should be set according to 
    the `parent_sha1` count in mime_graph below. A value of 0
    means this object is like a git 'blob' while a value of 1
@@ -22,6 +28,9 @@ CREATE TABLE IF NOT EXISTS `mime_object` (
    content will be a list list of sha1s of child objects */
   `direct_children` tinyint unsigned NOT NULL DEFAULT 0,
   `all_children` tinyint unsigned NOT NULL DEFAULT 0,
+  
+  /* TEMP FOR DEBUG ONLY! REMOVE (or the whole de-duplication feature is gone) */
+  /* `original` longtext DEFAULT NULL, */
   
   PRIMARY KEY  (`sha1`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;

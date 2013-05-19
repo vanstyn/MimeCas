@@ -97,6 +97,19 @@ __PACKAGE__->belongs_to(
 # Created by DBIx::Class::Schema::Loader v0.07010 @ 2013-05-19 02:09:24
 # DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:O8L4T0I6dzXZc7WtRana3Q
 
+__PACKAGE__->belongs_to(
+  "child_object",
+  "MimeCas::Schema::Result::MimeObject",
+  { sha1 => "child_sha1" },
+  { is_deferrable => 1, on_delete => "CASCADE", on_update => "CASCADE" },
+);
+
+__PACKAGE__->belongs_to(
+  "parent_object",
+  "MimeCas::Schema::Result::MimeObject",
+  { sha1 => "parent_sha1" },
+  { is_deferrable => 1, on_delete => "CASCADE", on_update => "CASCADE" },
+);
 
 # You can replace this text with custom code or comments, and it will be preserved on regeneration
 __PACKAGE__->meta->make_immutable;

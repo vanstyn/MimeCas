@@ -31,6 +31,29 @@ __PACKAGE__->config(
     banner_template => 'templates/rapidapp/simple_auth_banner.tt',
     dbic_models => ['Schema'],
     hide_fk_columns => 1,
+    configs => {
+      Schema => {
+        TableSpecs => {
+          MimeObject => {
+            columns => {
+              sha1 => { width => 250 },
+              content => { hidden => \1, renderer => jsfunc 'function(v){ return "<pre>" + v + "</pre>"; }' },
+              original =>  { no_column => \1, no_quick_search => \1, no_multifilter => \1 },
+              mime_graph_child_sha1s =>  { no_column => \1, no_quick_search => \1, no_multifilter => \1 },
+              mime_graph_parent_sha1s =>  { no_column => \1, no_quick_search => \1, no_multifilter => \1 },
+            }
+          },
+          MimeGraph => {
+            columns => {
+              child_object => { width => 250 },
+              parent_object => { width => 250 },
+            }
+          }
+          
+        }
+      
+      }
+    }
   },
 );
 

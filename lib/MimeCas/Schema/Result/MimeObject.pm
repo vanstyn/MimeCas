@@ -34,6 +34,17 @@ __PACKAGE__->table("mime_object");
   data_type: 'longtext'
   is_nullable: 0
 
+=head2 parsed
+
+  data_type: 'tinyint'
+  default_value: 0
+  is_nullable: 0
+
+=head2 parse_error
+
+  data_type: 'text'
+  is_nullable: 1
+
 =head2 direct_children
 
   data_type: 'tinyint'
@@ -55,6 +66,10 @@ __PACKAGE__->add_columns(
   { data_type => "char", is_nullable => 0, size => 40 },
   "content",
   { data_type => "longtext", is_nullable => 0 },
+  "parsed",
+  { data_type => "tinyint", default_value => 0, is_nullable => 0 },
+  "parse_error",
+  { data_type => "text", is_nullable => 1 },
   "direct_children",
   {
     data_type => "tinyint",
@@ -165,8 +180,8 @@ __PACKAGE__->has_many(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07010 @ 2013-05-19 02:32:26
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:pLO9pMDqOZ0NJuQ8A38MnA
+# Created by DBIx::Class::Schema::Loader v0.07010 @ 2013-05-19 14:21:52
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:iLqjxk4G6au6E4l7awdPUg
 
 __PACKAGE__->has_many(
   "parent_objects",
