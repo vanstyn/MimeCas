@@ -14,6 +14,10 @@ my @plugins = qw(
     RapidApp::RapidDbic
 );
 
+#debug_around 'DBIx::Class::Storage::DBI::_dbh_execute_for_fetch', stack => 10;
+
+
+
 use Catalyst;
 
 our $VERSION = '0.01';
