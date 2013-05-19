@@ -1,0 +1,43 @@
+catalyst.pl MimeCas
+cd MimeCas/
+
+script/mimecas_create.pl model Schema \
+ DBIC::Schema Schema create=static dbi:mysql:mime_cas root ''
+
+# regenerate:
+dbicdump -o dump_directory=./lib MimeCas::Schema \
+  -o debug=1 -o rescan=1 -o use_moose=1 -o components='["InflateColumn::DateTime"]' \
+  dbi:mysql:mime_cas root ''
+
+# set 'quote_names => 1' in the DBIC model connect_info
+
+## copied rapidapp directory to 'rapidapp/'
+## copied ExtJS 3.4.0 directory to 'ext-3.4.0/'
+
+mkdir root/templates
+
+# Setup required symlinks:
+ln -sf ../rapidapp/lib/RapidApp lib/
+ln -sf ../../ext-3.4.0 root/static/ext
+ln -sf ../../rapidapp/root/static/rapidapp root/static/
+ln -sf ../../rapidapp/root/templates/rapidapp root/templates/
+
+# - should then show these symlinks: -
+#
+## find . -type l | xargs ls -lsah                              
+# 0 lrwxrwxrwx 1 root root 24 May  7 12:35 ./lib/RapidApp -> ../rapidapp/lib/RapidApp
+# 0 lrwxrwxrwx 1 root root 15 May  7 12:35 ./root/static/ext -> ../../ext-3.4.0
+# 0 lrwxrwxrwx 1 root root 35 May  7 12:35 ./root/static/rapidapp -> ../../rapidapp/root/static/rapidapp
+# 0 lrwxrwxrwx 1 root root 38 May  7 12:35 ./root/templates/rapidapp -> ../../rapidapp/root/templates/rapidapp
+# -
+
+rm -f lib/MimeCas/Controller/Root.pm
+
+# setup .gitignore:
+echo '*.db
+ext-*
+root/autoassets*' > .gitignore
+
+
+# --- Configured lib/MimeCas.pm
+
