@@ -6,13 +6,28 @@ use warnings;
 use FindBin;
 use lib "$FindBin::Bin/../lib";
 
-use MimeCas;
+$| = 1;
+use Try::Tiny;
 
+use MimeCas;
 use Path::Class 0.32 qw( dir file );
-my $content = file($ARGV[0])->slurp;
+
+my @files = ();
+push @files, grep { -f $_ } glob($_) for (@ARGV);
+my $tot = scalar(@files);
+print "\n\n";
 
 my $Rs = MimeCas->model('Schema::MimeObject');
+my $i = 0;
+foreach my $file (@files) {
+  print "\r  --> Importing MIME file " . ++$i . " of $tot";
+  try {
+    my $content = file($file)->slurp;
+    $Rs->store_mime($content);
+  }
+  catch { warn "$_\n" };
+}
 
-print "\n\n ---- Importing MIME from file ----\n\n";
-$Rs->store_mime($content);
+print "\n\n";
+
 
