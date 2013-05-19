@@ -23,6 +23,7 @@ use Catalyst;
 our $VERSION = '0.01';
 our $TITLE = "MimeCas v" . $VERSION;
 
+
 __PACKAGE__->config(
   name => 'MimeCas',
   # Disable deprecated behavior needed by old applications
@@ -37,6 +38,15 @@ __PACKAGE__->config(
     hide_fk_columns => 1,
     configs => {
       Schema => {
+        virtual_columns => {
+          MimeObject => {
+            #disk_diff => {
+            #  data_type => "int", 
+            #  is_nullable => 0, 
+            #  sql => 'SELECT (self.virtual_size - self.actual_size)'
+            #},
+          }
+        },
         TableSpecs => {
           MimeObject => {
             columns => {
@@ -45,6 +55,8 @@ __PACKAGE__->config(
               original =>  { no_column => \1, no_quick_search => \1, no_multifilter => \1 },
               mime_graph_child_sha1s =>  { no_column => \1, no_quick_search => \1, no_multifilter => \1 },
               mime_graph_parent_sha1s =>  { no_column => \1, no_quick_search => \1, no_multifilter => \1 },
+              virtual_size => { profiles => ['filesize'] },
+              actual_size => { profiles => ['filesize']  },
             }
           },
           MimeGraph => {

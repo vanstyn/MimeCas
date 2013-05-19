@@ -59,6 +59,16 @@ __PACKAGE__->table("mime_object");
   extra: {unsigned => 1}
   is_nullable: 0
 
+=head2 virtual_size
+
+  data_type: 'integer'
+  is_nullable: 1
+
+=head2 actual_size
+
+  data_type: 'integer'
+  is_nullable: 1
+
 =cut
 
 __PACKAGE__->add_columns(
@@ -84,6 +94,10 @@ __PACKAGE__->add_columns(
     extra => { unsigned => 1 },
     is_nullable => 0,
   },
+  "virtual_size",
+  { data_type => "integer", is_nullable => 1 },
+  "actual_size",
+  { data_type => "integer", is_nullable => 1 },
 );
 __PACKAGE__->set_primary_key("sha1");
 
@@ -180,8 +194,8 @@ __PACKAGE__->has_many(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07010 @ 2013-05-19 14:21:52
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:iLqjxk4G6au6E4l7awdPUg
+# Created by DBIx::Class::Schema::Loader v0.07010 @ 2013-05-19 17:33:21
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:CZ+8Q02dyUsqifcu1Tvx2g
 
 __PACKAGE__->has_many(
   "parent_objects",

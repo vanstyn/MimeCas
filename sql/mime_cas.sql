@@ -29,6 +29,10 @@ CREATE TABLE IF NOT EXISTS `mime_object` (
   `direct_children` tinyint unsigned NOT NULL DEFAULT 0,
   `all_children` tinyint unsigned NOT NULL DEFAULT 0,
   
+  /* the size including all parts and the size actually stored in this row */
+  `virtual_size` int DEFAULT NULL,
+  `actual_size` int DEFAULT NULL,
+  
   /* TEMP FOR DEBUG ONLY! REMOVE (or the whole de-duplication feature is gone) */
   /* `original` longtext DEFAULT NULL, */
   

@@ -22,6 +22,8 @@ sub store_mime {
   my $self = shift;
   my $data = shift;
   
+  my %create = ();
+  
   # TMP FOR MYSQL - set max packet to 500MB
   $self->schema->storage->dbh->do('SET GLOBAL max_allowed_packet=' . 500 * 1024 * 1024);
   
@@ -30,17 +32,22 @@ sub store_mime {
     $MIME = $data;
   }
   else {
+  
+    $create{virtual_size} = length($data);
+  
     try {
       local $SIG{__WARN__} = sub { 
-        $parse_error ||= ''; 
-        $parse_error .= "$_\n";
+        my $msg = shift or return;
+        $create{parse_error} ||= ''; 
+        $create{parse_error} .= "$msg\n";
       };
       $MIME = Email::MIME->new($data); 
     }
     catch { 
+      my $msg = shift or return;
       $died = 1; 
-      $parse_error ||= ''; 
-      $parse_error .= "$_\n"; 
+      $create{parse_error} ||= ''; 
+      $create{parse_error} .= "$msg\n";
     };
   }
   
@@ -51,7 +58,7 @@ sub store_mime {
     return $self->_find_or_create_mime_row({
       content => $data,
       parsed => 0,
-      parse_error => $parse_error
+      %create
     });
   }
   
@@ -64,6 +71,8 @@ sub store_mime {
     # the actual body we store a list of child checksums. This ensures that
     # our checksum will consider the entire nested content without all the
     # duplicate storage. This works exactly the same as Git
+    
+    $create{virtual_size} ||= length($MIME->as_string);
   
     my $content = $MIME->header_obj->as_string . "\n---MimeCas Child Parts SHA1 Checksums---\n";
     my @children = ();
@@ -87,11 +96,11 @@ sub store_mime {
         # TODO: sometimes this rel/sub insert encounters duplicates... how/why?
         map {{ child_sha1 => $_, order => $order++ }} @children
       ],
-      parse_error => $parse_error
+      %create
     },$MIME);
   }
   else {
-    return $self->_find_or_create_mime_row({ parse_error => $parse_error },$MIME);
+    return $self->_find_or_create_mime_row(\%create,$MIME);
   }
 }
 
@@ -114,6 +123,8 @@ sub _find_or_create_mime_row {
 
     $create->{direct_children} //= 0;
     $create->{all_children} //= 0;
+    $create->{virtual_size} //= length($create->{content});
+    $create->{actual_size} //= length($create->{content});
     
     if($MIME) {
       $create->{mime_headers} //= $self->get_headers_packet($create->{sha1},$MIME);
