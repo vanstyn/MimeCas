@@ -20,7 +20,8 @@ CREATE TABLE IF NOT EXISTS `mime_object` (
    means this object is like a git 'blob' while a value of 1
    or more means it is like a git 'tree'. Like in git, the tree
    content will be a list list of sha1s of child objects */
-  `children` tinyint unsigned NOT NULL DEFAULT 0,
+  `direct_children` tinyint unsigned NOT NULL DEFAULT 0,
+  `all_children` tinyint unsigned NOT NULL DEFAULT 0,
   
   PRIMARY KEY  (`sha1`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;

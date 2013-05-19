@@ -22,17 +22,22 @@ sub store_mime {
   if(@subparts > 0) {
     my $content = '';
     my @children = ();
+    my $grand_children = 0;
     foreach my $Part (@subparts) {
       my $ChildRow = $self->store_mime($Part);
       my $child_sha1 = $ChildRow->get_column('sha1');
+      $grand_children += $ChildRow->get_column('all_children');
       $content .= $child_sha1 . ' ' . $Part->content_type . "\n";
       push @children, $child_sha1;
     }
     my $order = 0;
+    my $direct_children = scalar(@children);
+    my $all_children = $direct_children + $grand_children;
     return $self->_find_or_create_mime_row($MIME,{
       content => $content,
-      children => scalar(@children),
-      mime_graph_parent_sha1s => [
+      direct_children => $direct_children,
+      all_children => $all_children,
+      child_objects => [
         map {{ child_sha1 => $_, order => $order++ }} @children
       ]
     });
@@ -53,7 +58,8 @@ sub _find_or_create_mime_row {
   my $sha1 = $self->calculate_checksum($create->{content});
   return $self->find($sha1) || $self->create({
     sha1 => $sha1,
-    children => 0,
+    direct_children => 0,
+    all_children => 0,
     mime_headers => $self->get_headers_packet($MIME),
     %$create
   });

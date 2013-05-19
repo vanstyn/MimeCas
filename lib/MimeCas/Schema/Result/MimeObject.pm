@@ -34,7 +34,14 @@ __PACKAGE__->table("mime_object");
   data_type: 'longtext'
   is_nullable: 0
 
-=head2 children
+=head2 direct_children
+
+  data_type: 'tinyint'
+  default_value: 0
+  extra: {unsigned => 1}
+  is_nullable: 0
+
+=head2 all_children
 
   data_type: 'tinyint'
   default_value: 0
@@ -48,7 +55,14 @@ __PACKAGE__->add_columns(
   { data_type => "char", is_nullable => 0, size => 40 },
   "content",
   { data_type => "longtext", is_nullable => 0 },
-  "children",
+  "direct_children",
+  {
+    data_type => "tinyint",
+    default_value => 0,
+    extra => { unsigned => 1 },
+    is_nullable => 0,
+  },
+  "all_children",
   {
     data_type => "tinyint",
     default_value => 0,
@@ -151,8 +165,22 @@ __PACKAGE__->has_many(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07010 @ 2013-05-19 02:09:24
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:UAfGStESVOKMbD7IYO1Z0g
+# Created by DBIx::Class::Schema::Loader v0.07010 @ 2013-05-19 02:32:26
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:pLO9pMDqOZ0NJuQ8A38MnA
+
+__PACKAGE__->has_many(
+  "parent_objects",
+  "MimeCas::Schema::Result::MimeGraph",
+  { "foreign.child_sha1" => "self.sha1" },
+  { cascade_copy => 0, cascade_delete => 0 },
+);
+
+__PACKAGE__->has_many(
+  "child_objects",
+  "MimeCas::Schema::Result::MimeGraph",
+  { "foreign.parent_sha1" => "self.sha1" },
+  { cascade_copy => 0, cascade_delete => 0 },
+);
 
 
 # You can replace this text with custom code or comments, and it will be preserved on regeneration
