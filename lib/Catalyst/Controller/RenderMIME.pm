@@ -84,7 +84,7 @@ sub _resolve_path {
     ) unless (blessed $MIME && $MIME->isa('Email::MIME'));
   }
   
-  return $MIME unless ($next);
+  return $MIME unless (defined $next);
   $next = lc($next);
   
   my $SubPart;
