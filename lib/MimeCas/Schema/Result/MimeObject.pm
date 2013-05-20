@@ -212,6 +212,16 @@ __PACKAGE__->has_many(
 );
 
 
+use Email::MIME;
+
+sub Mime {
+  my $self = shift;
+  return Email::MIME->new($self->content);
+}
+
+
+
+
 # You can replace this text with custom code or comments, and it will be preserved on regeneration
 __PACKAGE__->meta->make_immutable;
 1;
