@@ -37,20 +37,30 @@ __PACKAGE__->config(
     hide_fk_columns => 1,
     configs => {
       Schema => {
+        grid_params => {
+          '*defaults' => {
+            include_colspec => ['*', '*.*'],
+          },
+        },
         virtual_columns => {
           MimeObject => {
-            #disk_diff => {
-            #  data_type => "int", 
-            #  is_nullable => 0, 
-            #  sql => 'SELECT (self.virtual_size - self.actual_size)'
-            #},
+             view_link => {
+                data_type => "varchar",
+                is_nullable => 0,
+                size => 255,
+                sql => 'SELECT CONCAT("<a target=\"_blank\" href=\"/mime/content/",CONCAT(self.sha1,"\">View</a>"))'
+              },
           }
         },
         TableSpecs => {
           MimeObject => {
             columns => {
               sha1 => { width => 250 },
-              content => { hidden => \1, renderer => jsfunc 'function(v){ return "<pre>" + v + "</pre>"; }' },
+              content => { 
+                hidden => \1,
+                no_quick_search => \1,
+                renderer => jsfunc 'function(v){ return "<pre>" + v + "</pre>"; }' 
+              },
               original =>  { no_column => \1, no_quick_search => \1, no_multifilter => \1 },
               mime_graph_child_sha1s =>  { no_column => \1, no_quick_search => \1, no_multifilter => \1 },
               mime_graph_parent_sha1s =>  { no_column => \1, no_quick_search => \1, no_multifilter => \1 },
