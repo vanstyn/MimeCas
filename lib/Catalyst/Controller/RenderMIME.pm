@@ -30,8 +30,8 @@ sub content :Local {
   my ($self, $c, $id, @path) = @_;
   my $MIME = $self->_resolve_path($c, $id, @path);
   
-  my $cid_path = $self->action_namespace($c) . "/$id/cid";
-  return $self->_render_part($c,$MIME,$cid_path);
+  my $cid_path = '/' . $self->action_namespace($c) . "/content/$id/cid";
+  return $self->_view_part($c,$MIME,$cid_path);
 }
 
 
@@ -67,6 +67,7 @@ sub method :Local {
   
   return $c->detach;
 }
+
 
 
 sub _resolve_path {
@@ -133,20 +134,61 @@ sub _resolve_cid {
 sub _render_part {
   my ($self, $c, $MIME, $cid_path) = @_;
   
+  $self->_set_mime_headers($c,$MIME);
+  
   my $body = $MIME->body;
-  $self->convert_cids(\$body,$cid_path) 
+  $self->_convert_cids(\$body,$cid_path) 
     if ($MIME->content_type =~ /^text/);
+  
+  $c->res->body( $body );
+  return $c->detach;
+}
+
+
+sub _set_mime_headers {
+  my ($self, $c, $MIME) = @_;
   
   # TODO: find all the headers that will cause issues like the date/cookie
   my @exclude_headers = qw(Date); 
   my %excl = map {$_=>1} @exclude_headers;
   my @header_names = grep { !$excl{$_} } $MIME->header_names;
   $c->res->header( $_ => $MIME->header($_) ) for (@header_names);
+
+}
+
+sub _view_part {
+  my ($self, $c, $MIME, $cid_path) = @_;
   
-  $c->res->body( $body );
+  my @parts = $MIME->parts;
+  my $Rich = try{($parts[0]->parts)[1]};
   
+  return $self->_render_part($c, $MIME, $cid_path) unless (
+    defined $Rich
+    and $Rich->content_type =~ /^text/
+  );
+
+  $self->_set_mime_headers($c,$Rich);
+	
+	my $p = '<p style="margin-top:3px;margin-bottom:3px;">';
+	
+	my $html = '';
+	
+	$html .= '<div style="font-size:90%;">';
+	#$html .= $p . '<b>' . $_ . ':&nbsp;</b>' . join(',',$Rich->header($_)) . '</p>' for ($Rich->header_names);
+	$html .= $p . '<b>' . $_ . ':&nbsp;</b>' . join(',',$MIME->header($_)) . '</p>' for (qw(From Date To Subject));
+	$html .= '</div>';
+	
+	$html .= '<hr><div style="padding-top:15px;"></div>';
+	
+	$html .= $Rich->body_str;
+	
+	$self->_convert_cids(\$html,$cid_path);
+	
+	$c->res->body( $html );
   return $c->detach;
 }
+
+
 
 
 sub _convert_cids {
