@@ -12,6 +12,7 @@ BEGIN { extends 'Catalyst::Controller' }
 use Catalyst::Utils;
 use HTML::TokeParser::Simple;
 use Data::Dumper::Concise 'Dumper';
+use RapidApp::Include qw(sugar perlutil);
  
 
 # ---
@@ -95,8 +96,8 @@ sub _resolve_path {
   else {
     # Assume 'part'
     $next = shift @path if ($next eq 'part');
-    
-    my $idx = shift @path;
+
+    my $idx = $next;
     Catalyst::Exception->throw("Bad MIME Part Index '$idx' - must be an integer")
       unless ($idx =~ /^\d+$/);
       

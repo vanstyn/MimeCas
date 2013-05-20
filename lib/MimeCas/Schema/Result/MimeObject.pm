@@ -211,15 +211,24 @@ __PACKAGE__->has_many(
   { cascade_copy => 0, cascade_delete => 0 },
 );
 
+use RapidApp::Include qw(sugar perlutil);
 
 use Email::MIME;
 
 sub Mime {
   my $self = shift;
-  return Email::MIME->new($self->content);
+  
+  my $MIME = Email::MIME->new($self->content);
+  if ($self->direct_children > 0) {
+    my $GraphRs = $self->child_objects->search_rs(undef,{
+      order_by => { '-asc' => 'order' }
+    });
+    my @parts = map { $_->child_sha1->Mime } ($GraphRs->all);
+    $MIME->parts_set( \@parts );
+  }
+  
+  return $MIME;
 }
-
-
 
 
 # You can replace this text with custom code or comments, and it will be preserved on regeneration
