@@ -72,8 +72,8 @@ CREATE TABLE IF NOT EXISTS `mime_attribute` (
   `sha1` char(40) NOT NULL,
   
   /* TODO: lookup the real max length should be for MIME type/subtype */
-  `type` varchar(64) NOT NULL,
-  `subtype` varchar(128) NOT NULL,
+  `type` varchar(64) DEFAULT NULL,
+  `subtype` varchar(128) DEFAULT NULL,
   
   `message_id` varchar(255) default NULL,
   
@@ -85,14 +85,18 @@ CREATE TABLE IF NOT EXISTS `mime_attribute` (
    can contain display name string. Should be lowercased */
   `from_addr` varchar(255) default NULL,
   
+  `subject` varchar(512) default NULL,
+  
   /* TODO: add more attributes as I think of them */
 
   /* The timestamp the MySQL row was updated/created (not from the MIME object) */
   `row_ts` TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
 
   PRIMARY KEY  (`sha1`),
-  KEY (`from_addr`),
+  KEY (`message_id`),
   KEY (`date`),
+  KEY (`from_addr`),
+  KEY (`subject`),
   FOREIGN KEY (`sha1`) REFERENCES `mime_object` (`sha1`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
  

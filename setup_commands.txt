@@ -1,6 +1,9 @@
 catalyst.pl MimeCas
 cd MimeCas/
 
+echo 'drop database if exists mime_cas; create database mime_cas;' \
+  | mysql; mysql mime_cas < sql/mime_cas.sql
+
 script/mimecas_create.pl model Schema \
  DBIC::Schema MimeCas::Schema create=static dbi:mysql:mime_cas root ''
 

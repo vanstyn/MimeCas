@@ -33,13 +33,13 @@ __PACKAGE__->table("mime_attribute");
 =head2 type
 
   data_type: 'varchar'
-  is_nullable: 0
+  is_nullable: 1
   size: 64
 
 =head2 subtype
 
   data_type: 'varchar'
-  is_nullable: 0
+  is_nullable: 1
   size: 128
 
 =head2 message_id
@@ -60,6 +60,12 @@ __PACKAGE__->table("mime_attribute");
   is_nullable: 1
   size: 255
 
+=head2 subject
+
+  data_type: 'varchar'
+  is_nullable: 1
+  size: 512
+
 =head2 row_ts
 
   data_type: 'timestamp'
@@ -73,9 +79,9 @@ __PACKAGE__->add_columns(
   "sha1",
   { data_type => "char", is_foreign_key => 1, is_nullable => 0, size => 40 },
   "type",
-  { data_type => "varchar", is_nullable => 0, size => 64 },
+  { data_type => "varchar", is_nullable => 1, size => 64 },
   "subtype",
-  { data_type => "varchar", is_nullable => 0, size => 128 },
+  { data_type => "varchar", is_nullable => 1, size => 128 },
   "message_id",
   { data_type => "varchar", is_nullable => 1, size => 255 },
   "date",
@@ -86,6 +92,8 @@ __PACKAGE__->add_columns(
   },
   "from_addr",
   { data_type => "varchar", is_nullable => 1, size => 255 },
+  "subject",
+  { data_type => "varchar", is_nullable => 1, size => 512 },
   "row_ts",
   {
     data_type => "timestamp",
@@ -114,8 +122,8 @@ __PACKAGE__->belongs_to(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07010 @ 2013-05-19 00:17:53
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:jjQ4la8j4NGBI5kpQKPVHQ
+# Created by DBIx::Class::Schema::Loader v0.07010 @ 2013-05-21 20:40:47
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:HMZBjnDVvgkyBQjVD/zeag
 
 
 # You can replace this text with custom code or comments, and it will be preserved on regeneration

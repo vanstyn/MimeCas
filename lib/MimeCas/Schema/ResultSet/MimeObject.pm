@@ -7,8 +7,13 @@ use warnings;
 use RapidApp::Include qw(sugar perlutil);
 
 use Email::MIME;
+use Email::Address;
+use Email::Date;
+
 use Digest::SHA1;
 use Try::Tiny;
+use DateTime;
+use DateTime::Format::Flexible;
 
 sub schema { (shift)->result_source->schema };
 
@@ -62,9 +67,6 @@ sub store_mime {
     });
   }
   
-  # temp for debug
-  #local $_ = $data;
-
   my @subparts = $MIME->subparts;
   if(@subparts > 0) {
     # Save a "fake" version of the MIME object. Same headers, but instead of
@@ -106,7 +108,7 @@ sub store_mime {
 
 
 
-# This function is general purpose and supposed multiple modes of use.
+# This function is general purpose and supports multiple modes of use.
 # see where it is called for details (since it is still *private*, it
 # does assume it is being called with correct data)
 sub _find_or_create_mime_row {
@@ -127,9 +129,13 @@ sub _find_or_create_mime_row {
     $create->{actual_size} //= length($create->{content});
     
     if($MIME) {
+      $create->{mime_attribute} = $self->get_mime_attributes($create->{sha1},$MIME);
       $create->{mime_headers} //= $self->get_headers_packet($create->{sha1},$MIME);
       $create->{parsed} //= 1;
     };
+    
+    # Why????
+    $self->schema->storage->dbh->do('SET FOREIGN_KEY_CHECKS=0;');
     
     ## Call in void context to prevent trying to select the row back in:
     $self->populate([$create]);
@@ -140,12 +146,8 @@ sub _find_or_create_mime_row {
 }
 
 
-
-
 sub get_headers_packet {
-  my $self = shift;
-  my $sha1 = shift;
-  my $MIME = shift;
+  my ($self, $sha1, $MIME) = @_;
   
   my $mime_headers = [];
   my $header_ord = 0;
@@ -165,6 +167,20 @@ sub get_headers_packet {
 }
 
 
+sub get_mime_attributes {
+  my ($self, $sha1, $MIME) = @_;
+  
+  my %row = ( sha1 => $sha1 );
+  $row{subject} = $MIME->header('Subject');
+  $row{message_id} = $MIME->header('Message-ID');
+  $row{date} = $self->_time_piece_to_dt(find_date $MIME);
+  $row{from_addr} = $self->_parse_first_email_address($MIME->header('From'));
+  ($row{type},$row{subtype}) = $self->_parse_mime_type_subtype($MIME);
+  
+  return \%row;
+}
+
+
 sub calculate_checksum {
 	my $self = shift;
 	my $data = shift;
@@ -173,8 +189,29 @@ sub calculate_checksum {
 	return $sha1;
 }
 
+# lame:
+sub _time_piece_to_dt {
+  my $self = shift;
+  my $t = shift or return undef;
+  return DateTime::Format::Flexible->parse_datetime("$t");
+}
 
+sub _parse_first_email_address {
+  my $self = shift;
+  my $addr = shift or return undef;
+  my @addresses = Email::Address->parse($addr) or return undef;
+  my $Address = shift @addresses or return undef;
+  return lc($Address->address);
+}
 
+sub _parse_mime_type_subtype {
+  my $self = shift;
+  my $MIME = shift or return ();
+  my $ct = $MIME->content_type or return ();
+  ($ct) = split(/\s*\;\s*/,$ct);
+  my ($type,$subtype) = split(/\//,$ct,2);
+  return (lc($type),lc($subtype));
+}
 
 
 1;
