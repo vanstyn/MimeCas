@@ -129,8 +129,9 @@ sub _find_or_create_mime_row {
     $create->{actual_size} //= length($create->{content});
     
     if($MIME) {
-      $create->{mime_attribute} = $self->get_mime_attributes($create->{sha1},$MIME);
+      $create->{mime_attribute} = $self->get_mime_attribute_packet($create->{sha1},$MIME);
       $create->{mime_headers} //= $self->get_headers_packet($create->{sha1},$MIME);
+      $create->{mime_recipients} //= $self->get_mime_recipients_packet($create->{sha1},$MIME);
       $create->{parsed} //= 1;
     };
     
@@ -167,7 +168,7 @@ sub get_headers_packet {
 }
 
 
-sub get_mime_attributes {
+sub get_mime_attribute_packet {
   my ($self, $sha1, $MIME) = @_;
   
   my %row = ( sha1 => $sha1 );
@@ -180,6 +181,34 @@ sub get_mime_attributes {
   return \%row;
 }
 
+
+sub get_mime_recipients_packet {
+  my ($self, $sha1, $MIME) = @_;
+  
+  my $mime_recipients = [];
+  my $recipient_ord = 0;
+  
+  my $To = $MIME->header('To');
+  my $CC = $MIME->header('CC');
+  
+  my @to = $To ? Email::Address->parse($To) : ();
+  my @cc = $To ? Email::Address->parse($CC) : ();
+  
+  push @$mime_recipients, {
+    sha1 => $sha1,
+    addr => lc($_->address),
+    order => $recipient_ord++
+  } for (@to);
+  
+  push @$mime_recipients, {
+    sha1 => $sha1,
+    addr => lc($_->address),
+    cc => 1,
+    order => $recipient_ord++
+  } for (@cc);
+  
+  return $mime_recipients;
+}
 
 sub calculate_checksum {
 	my $self = shift;
