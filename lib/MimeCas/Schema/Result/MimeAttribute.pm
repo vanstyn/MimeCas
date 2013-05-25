@@ -66,6 +66,11 @@ __PACKAGE__->table("mime_attribute");
   is_nullable: 1
   size: 512
 
+=head2 debug_structure
+
+  data_type: 'text'
+  is_nullable: 1
+
 =head2 row_ts
 
   data_type: 'timestamp'
@@ -94,6 +99,8 @@ __PACKAGE__->add_columns(
   { data_type => "varchar", is_nullable => 1, size => 255 },
   "subject",
   { data_type => "varchar", is_nullable => 1, size => 512 },
+  "debug_structure",
+  { data_type => "text", is_nullable => 1 },
   "row_ts",
   {
     data_type => "timestamp",
@@ -122,8 +129,8 @@ __PACKAGE__->belongs_to(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07010 @ 2013-05-21 20:40:47
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:HMZBjnDVvgkyBQjVD/zeag
+# Created by DBIx::Class::Schema::Loader v0.07010 @ 2013-05-21 21:30:52
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:dsuPs3+cH7m7l9CURxfjqg
 
 
 # You can replace this text with custom code or comments, and it will be preserved on regeneration

@@ -73,6 +73,13 @@ __PACKAGE__->config(
               child_object => { width => 250 },
               parent_object => { width => 250 },
             }
+          },
+          MimeAttribute => {
+            columns => {
+              debug_structure => { 
+                 renderer => jsfunc 'function(v){ return "<pre>" + v + "</pre>"; }' 
+               },
+            }
           }
           
         }

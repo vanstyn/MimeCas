@@ -177,6 +177,7 @@ sub get_mime_attribute_packet {
   $row{date} = $self->_time_piece_to_dt(find_date $MIME);
   $row{from_addr} = $self->_parse_first_email_address($MIME->header('From'));
   ($row{type},$row{subtype}) = $self->_parse_mime_type_subtype($MIME);
+  $row{debug_structure} = $MIME->debug_structure;
   
   return \%row;
 }

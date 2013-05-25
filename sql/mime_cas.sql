@@ -87,6 +87,8 @@ CREATE TABLE IF NOT EXISTS `mime_attribute` (
   
   `subject` varchar(512) default NULL,
   
+  `debug_structure` text,
+  
   /* TODO: add more attributes as I think of them */
 
   /* The timestamp the MySQL row was updated/created (not from the MIME object) */
