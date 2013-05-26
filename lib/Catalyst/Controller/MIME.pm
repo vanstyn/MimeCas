@@ -38,11 +38,7 @@ sub content :Local {
 sub view :Local {
   my ($self, $c, $id, @path) = @_;
   my $MIME = $self->_resolve_path($c, $id, @path);
-  
   return $self->_view_mime($c, $MIME, $id, @path);
-  
-  #my $cid_path = '/' . $self->action_namespace($c) . "/content/$id/cid";
-  #return $self->_view_mime($c,$MIME,$cid_path);
 }
 
 # View a MIME Object as RAW Text
@@ -175,11 +171,12 @@ sub _direct_render {
 
 
 sub _render_part {
-  my ($self, $c, $MIME, $cid_path) = @_;
+  my ($self, $c, $MIME, @path) = @_;
   
   $self->_set_mime_headers($c,$MIME);
   
   my $body = $MIME->body;
+  my $cid_path = $self->_path_to_cid_path($c,@path);
   $self->_convert_cids(\$body,$cid_path) 
     if ($MIME->content_type =~ /^text/);
   
@@ -201,12 +198,12 @@ sub _set_mime_headers {
 }
 
 sub _view_part {
-  my ($self, $c, $MIME, $cid_path) = @_;
+  my ($self, $c, $MIME, @path) = @_;
   
   my $ViewPart = $self->_find_best_view_part($MIME);
   
   # Fall back to raw rendering unless the found View Part is text:
-  return $self->_render_part($c, $MIME, $cid_path) unless (
+  return $self->_render_part($c, $MIME, @path) unless (
     $ViewPart->content_type =~ /^text/
   );
 
@@ -220,7 +217,7 @@ sub _view_part {
   #  $self->_get_rich_html_body($ViewPart,$cid_path) :
   #    $self->_render_html_with_headers($ViewPart);
       
-  my $body = $self->_get_rich_html_body($MIME,$ViewPart,$cid_path);
+  my $body = $self->_get_rich_html_body($c,$MIME,$ViewPart,@path);
 	
 	$c->res->body( $body );
   return $c->detach;
@@ -306,8 +303,8 @@ sub _view_mime {
   
   
   # Old view:
-  my $cid_path = $self->_path_to_cid_path($c,@path);
-  return $self->_view_part($c, $MIME, $cid_path);
+  
+  return $self->_view_part($c, $MIME, @path);
 }
 
 
@@ -344,10 +341,11 @@ sub _render_html_with_headers {
 
 
 sub _get_rich_html_body {
-  my ($self, $MIME, $ViewPart, $cid_path) = @_;
+  my ($self, $c, $MIME, $ViewPart, @path) = @_;
   
   my $body_str = $ViewPart->body_str;
   if ($ViewPart->content_type =~ /^text\/html/) {
+    my $cid_path = $self->_path_to_cid_path($c,@path);
     $self->_convert_cids(\$body_str,$cid_path);
   }
   else {
@@ -372,10 +370,48 @@ sub _get_rich_html_body {
 	$html .= $p . '<b>' . $_ . ':&nbsp;</b>' . 
     encode_entities(join(',',$MIME->header($_))) . '</p>' . "\n" for (@inc_headers);
 	
+  my @links = $self->_get_attachments_links($c,$MIME,@path);
+  $html .= $p . 
+    '<b><i><span style="color:darkgreen;">Attachments:&nbsp;</span></i></b>' . 
+    join(',&nbsp',@links) . '</p>' . "\n" if (scalar(@links) > 0);
+      
   $html .= '</div>' . "\n";
 	$html .= '<hr><div style="padding-top:15px;"></div>' . "\n\n";
 	
   return $html . $body_str;
+}
+
+
+# Gets a list of links (<a> tags) pointing to subparts (of multipart/mixed
+# MIME objects) with a "name" or "filename" property within the content_type
+# This I *think* is what E-Mail clients do when they add attachments
+sub _get_attachments_links {
+  my ($self, $c, $MIME, @path) = @_;
+  
+  # Displayed attachments in E-Mails are parts in multipart/mixed:
+  return () unless ($MIME->content_type =~ /multipart\/mixed/);
+  
+  my @links = ();
+  my $count = 0;
+  foreach my $Part ($MIME->parts) {
+    my $idx = $count++;
+    my @sections = split(/\s*\;\s*/,$Part->content_type);
+    my %prop = ();
+    foreach my $sect (@sections) {
+      my ($k,$v) = split(/\s*\=\s*/,$sect,2);
+      next unless ($v);
+      $v =~ s/^\"//;
+      $v =~ s/\"$//;
+      $prop{lc($k)} = $v;
+    }
+    
+    my $filename = ($prop{name} || $prop{filename}) or next;
+    push @links, '<a target="_blank" href="' . 
+      $self->_path_to_content_url($c,@path,$idx) . '">' .
+        encode_entities($filename) . '</a>';
+  }
+
+  return @links;
 }
 
 
