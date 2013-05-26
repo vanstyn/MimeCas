@@ -14,7 +14,9 @@ my @plugins = qw(
     RapidApp::RapidDbic
 );
 
+#push @plugins, qw(RapidApp::AuthCore);
 push @plugins, qw(RapidApp::NavCore);
+#push @plugins, qw(RapidApp::RequestLogger);
 
 use Catalyst;
 
@@ -47,7 +49,7 @@ __PACKAGE__->config(
                 data_type => "varchar",
                 is_nullable => 0,
                 size => 255,
-                sql => 'SELECT CONCAT("<a target=\"_blank\" href=\"/mime/content/",CONCAT(self.sha1,"\">View</a>"))'
+                sql => 'SELECT CONCAT("<a target=\"_blank\" href=\"/mime/view/",CONCAT(self.sha1,"\">View</a>"))'
               },
           }
         },

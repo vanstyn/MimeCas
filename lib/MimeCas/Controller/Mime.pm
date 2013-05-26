@@ -2,7 +2,7 @@ package MimeCas::Controller::Mime;
 use Moose;
 use namespace::autoclean;
 
-BEGIN {extends 'Catalyst::Controller::RenderMIME'; }
+BEGIN {extends 'Catalyst::Controller::MIME'; }
 
 has '+expose_methods', default => 1;
 
