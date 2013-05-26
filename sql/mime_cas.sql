@@ -167,7 +167,7 @@ CREATE TABLE IF NOT EXISTS `mail_folder` (
   `id` int(11) unsigned NOT NULL auto_increment,
   
   /* parent folder. Only root folders should be null */
-  `pid` int(11) unsigned DEFAULT NULL,
+  `parent_id` int(11) unsigned DEFAULT NULL,
   `order` tinyint unsigned NOT NULL DEFAULT 0,
   
   /* This could also be an ID to a mailbox table with 
@@ -177,10 +177,10 @@ CREATE TABLE IF NOT EXISTS `mail_folder` (
   `name` varchar(255) NOT NULL,
 
   PRIMARY KEY  (`id`),
-  UNIQUE KEY(`mailbox_id`,`pid`,`name`),
+  UNIQUE KEY(`mailbox_id`,`parent_id`,`name`),
   FOREIGN KEY (`mailbox_id`) REFERENCES `mailbox` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-ALTER TABLE `mail_folder` ADD FOREIGN KEY (`pid`) REFERENCES `mail_folder` (`id`);
+ALTER TABLE `mail_folder` ADD FOREIGN KEY (`parent_id`) REFERENCES `mail_folder` (`id`);
 
 /* This is basically like a hard-link on a Linux filsystem. But
  instead of pointing to an inode address we point to a CAS (sha1) address */
@@ -189,14 +189,14 @@ CREATE TABLE IF NOT EXISTS `mail_message` (
   `id` int(11) unsigned NOT NULL auto_increment,
   
   /* parent folder */
-  `pid` int(11) unsigned NOT NULL,
+  `folder_id` int(11) unsigned NOT NULL,
   `order` tinyint unsigned NOT NULL DEFAULT 0,
   
   /* CAS address of the content */
   `sha1` char(40) NOT NULL,
 
   PRIMARY KEY  (`id`),
-  FOREIGN KEY (`pid`) REFERENCES `mail_folder` (`id`),
+  FOREIGN KEY (`folder_id`) REFERENCES `mail_folder` (`id`),
   FOREIGN KEY (`sha1`) REFERENCES `mime_object` (`sha1`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 

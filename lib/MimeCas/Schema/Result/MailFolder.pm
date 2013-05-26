@@ -30,7 +30,7 @@ __PACKAGE__->table("mail_folder");
   is_auto_increment: 1
   is_nullable: 0
 
-=head2 pid
+=head2 parent_id
 
   data_type: 'integer'
   extra: {unsigned => 1}
@@ -67,7 +67,7 @@ __PACKAGE__->add_columns(
     is_auto_increment => 1,
     is_nullable => 0,
   },
-  "pid",
+  "parent_id",
   {
     data_type => "integer",
     extra => { unsigned => 1 },
@@ -92,11 +92,11 @@ __PACKAGE__->add_columns(
   { data_type => "varchar", is_nullable => 0, size => 255 },
 );
 __PACKAGE__->set_primary_key("id");
-__PACKAGE__->add_unique_constraint("mailbox_id", ["mailbox_id", "pid", "name"]);
+__PACKAGE__->add_unique_constraint("mailbox_id", ["mailbox_id", "parent_id", "name"]);
 
 =head1 RELATIONS
 
-=head2 pid
+=head2 parent
 
 Type: belongs_to
 
@@ -105,9 +105,9 @@ Related object: L<MimeCas::Schema::Result::MailFolder>
 =cut
 
 __PACKAGE__->belongs_to(
-  "pid",
+  "parent",
   "MimeCas::Schema::Result::MailFolder",
-  { id => "pid" },
+  { id => "parent_id" },
   {
     is_deferrable => 1,
     join_type     => "LEFT",
@@ -127,7 +127,7 @@ Related object: L<MimeCas::Schema::Result::MailFolder>
 __PACKAGE__->has_many(
   "mail_folders",
   "MimeCas::Schema::Result::MailFolder",
-  { "foreign.pid" => "self.id" },
+  { "foreign.parent_id" => "self.id" },
   { cascade_copy => 0, cascade_delete => 0 },
 );
 
@@ -157,13 +157,13 @@ Related object: L<MimeCas::Schema::Result::MailMessage>
 __PACKAGE__->has_many(
   "mail_messages",
   "MimeCas::Schema::Result::MailMessage",
-  { "foreign.pid" => "self.id" },
+  { "foreign.folder_id" => "self.id" },
   { cascade_copy => 0, cascade_delete => 0 },
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07010 @ 2013-05-19 00:17:53
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:9bomDBHyUbbVrFmPbub35Q
+# Created by DBIx::Class::Schema::Loader v0.07010 @ 2013-05-26 17:51:27
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:qWbHLnhuPQYB7r5dXawTFg
 
 
 # You can replace this text with custom code or comments, and it will be preserved on regeneration

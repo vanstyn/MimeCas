@@ -41,6 +41,7 @@ __PACKAGE__->config(
         grid_params => {
           '*defaults' => {
             include_colspec => ['*', '*.*'],
+            cache_total_count => 0 #<-- turn this off while lots of data is changing
           },
         },
         virtual_columns => {
@@ -59,7 +60,7 @@ __PACKAGE__->config(
               sha1 => { width => 250 },
               content => { 
                 hidden => \1,
-                no_quick_search => \1,
+                #no_quick_search => \1,
                 renderer => jsfunc 'function(v){ return "<pre>" + v + "</pre>"; }' 
               },
               original =>  { no_column => \1, no_quick_search => \1, no_multifilter => \1 },
@@ -67,6 +68,7 @@ __PACKAGE__->config(
               mime_graph_parent_sha1s =>  { no_column => \1, no_quick_search => \1, no_multifilter => \1 },
               virtual_size => { profiles => ['filesize'] },
               actual_size => { profiles => ['filesize']  },
+              view_link =>  { no_quick_search => \1, no_multifilter => \1, sortable => \0 },
             }
           },
           MimeGraph => {
