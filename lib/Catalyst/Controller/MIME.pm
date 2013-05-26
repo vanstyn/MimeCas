@@ -350,7 +350,9 @@ sub _get_rich_html_body {
   }
   else {
     # Plain text:
-    $body_str =  "\n\n" . '<pre>' . $body_str . '</pre>' . "\n\n";
+    $body_str =  "\n\n" . '<pre style="white-space: pre-wrap; word-wrap: break-word;">' .
+      $body_str . 
+    '</pre>' . "\n\n";
   }
   
   # E-Mail headers:
