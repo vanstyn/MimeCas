@@ -165,6 +165,26 @@ __PACKAGE__->has_many(
 # Created by DBIx::Class::Schema::Loader v0.07010 @ 2013-05-26 17:51:27
 # DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:qWbHLnhuPQYB7r5dXawTFg
 
+sub schema { (shift)->result_source->schema }
+
+sub add_unique_message {
+  my $self = shift;
+  my $content = shift;
+  
+  my $MimeRow = $self->schema->resultset('MimeObject')->store_mime($content)
+    or die "Error storing MIME Row";
+  
+  my $sha1 = $MimeRow->get_column('sha1');
+  my $Rs = $self->mail_messages;
+  return $Rs->search_rs({ sha1 => $sha1 })->first || $Rs->create({
+    folder_id => $self->get_column('id'),
+    sha1 => $sha1
+  });
+}
+
+
+
+
 
 # You can replace this text with custom code or comments, and it will be preserved on regeneration
 __PACKAGE__->meta->make_immutable;

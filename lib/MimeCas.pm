@@ -83,6 +83,9 @@ __PACKAGE__->config(
                  renderer => jsfunc 'function(v){ return "<pre>" + v + "</pre>"; }' 
                },
             }
+          },
+          MailFolder => {
+            display_column => 'name'
           }
           
         }

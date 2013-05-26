@@ -179,7 +179,7 @@ sub get_mime_attribute_packet {
   $row{from_addr} = $self->_get_normalized_from($MIME);
   
   ($row{type},$row{subtype}) = $self->_parse_mime_type_subtype($MIME);
-  $row{debug_structure} = $MIME->debug_structure;
+  $row{debug_structure} = $MIME->debug_structure if ($MIME->content_type);
   
   return \%row;
 }

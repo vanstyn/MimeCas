@@ -37,6 +37,12 @@ __PACKAGE__->table("mail_message");
   is_foreign_key: 1
   is_nullable: 0
 
+=head2 uid
+
+  data_type: 'varchar'
+  is_nullable: 0
+  size: 64
+
 =head2 order
 
   data_type: 'tinyint'
@@ -68,6 +74,8 @@ __PACKAGE__->add_columns(
     is_foreign_key => 1,
     is_nullable => 0,
   },
+  "uid",
+  { data_type => "varchar", is_nullable => 0, size => 64 },
   "order",
   {
     data_type => "tinyint",
@@ -79,6 +87,7 @@ __PACKAGE__->add_columns(
   { data_type => "char", is_foreign_key => 1, is_nullable => 0, size => 40 },
 );
 __PACKAGE__->set_primary_key("id");
+__PACKAGE__->add_unique_constraint("folder_id", ["folder_id", "uid"]);
 
 =head1 RELATIONS
 
@@ -113,9 +122,15 @@ __PACKAGE__->belongs_to(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07010 @ 2013-05-26 17:51:27
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:XduLQNQWpEuH3G3sEO11cg
+# Created by DBIx::Class::Schema::Loader v0.07010 @ 2013-05-26 19:11:03
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:1XhG+cvjmtfE04u+iCBjmA
 
+__PACKAGE__->belongs_to(
+  "attribute",
+  "MimeCas::Schema::Result::MimeAttribute",
+  { sha1 => "sha1" },
+  { is_deferrable => 1, on_delete => "CASCADE", on_update => "CASCADE" },
+);
 
 # You can replace this text with custom code or comments, and it will be preserved on regeneration
 __PACKAGE__->meta->make_immutable;

@@ -190,6 +190,10 @@ CREATE TABLE IF NOT EXISTS `mail_message` (
   
   /* parent folder */
   `folder_id` int(11) unsigned NOT NULL,
+  
+  /* id specific to the folder (like IMAP UID) */
+  `uid` varchar(64) NOT NULL,
+  
   `order` tinyint unsigned NOT NULL DEFAULT 0,
   
   /* CAS address of the content */
@@ -197,7 +201,8 @@ CREATE TABLE IF NOT EXISTS `mail_message` (
 
   PRIMARY KEY  (`id`),
   FOREIGN KEY (`folder_id`) REFERENCES `mail_folder` (`id`),
-  FOREIGN KEY (`sha1`) REFERENCES `mime_object` (`sha1`)
+  FOREIGN KEY (`sha1`) REFERENCES `mime_object` (`sha1`),
+  UNIQUE KEY (`folder_id`,`uid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 
