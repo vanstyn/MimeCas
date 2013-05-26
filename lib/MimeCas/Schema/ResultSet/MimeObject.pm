@@ -175,7 +175,9 @@ sub get_mime_attribute_packet {
   $row{subject} = $MIME->header('Subject');
   $row{message_id} = $MIME->header('Message-ID');
   $row{date} = $self->_time_piece_to_dt(find_date $MIME);
-  $row{from_addr} = $self->_parse_first_email_address($MIME->header('From'));
+  
+  $row{from_addr} = $self->_get_normalized_from($MIME);
+  
   ($row{type},$row{subtype}) = $self->_parse_mime_type_subtype($MIME);
   $row{debug_structure} = $MIME->debug_structure;
   
@@ -241,6 +243,28 @@ sub _parse_mime_type_subtype {
   ($ct) = split(/\s*\;\s*/,$ct);
   my ($type,$subtype) = split(/\//,$ct,2);
   return (lc($type),lc($subtype));
+}
+
+
+sub _get_normalized_from {
+  my $self = shift;
+  my $MIME = shift;
+  
+  my $from = $self->_parse_first_email_address($MIME->header('From'));
+  unless($from) {
+    $from = $MIME->header('From');
+    if($from) {
+      # See if this is a obfuscated from (joe at domain.com):
+      my ($user,$domain) = split(/\s+at\s+/i,$from,2);
+      if($domain) {
+        # OK! it is! but we probably need to strip all but the first word:
+        ($domain) = split(/\s+/,$domain);
+        $from = $user . '@' . $domain;
+      }
+    }  
+  }
+  
+  return $from;
 }
 
 

@@ -31,6 +31,8 @@ die "Temp gz file '$tmp_gz_file' already exists\n" if (-e $tmp_gz_file);
 
 $cleanup = 1;
 
+$SIG{INT} = sub { exit; };
+
 END {
   if($cleanup) {
     print "\n\nCleaning up temp files\n\n";
