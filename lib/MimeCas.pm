@@ -14,8 +14,7 @@ my @plugins = qw(
     RapidApp::RapidDbic
 );
 
-#debug_around 'DBIx::Class::Storage::DBI::_dbh_execute_for_fetch', stack => 10;
-
+push @plugins, qw(RapidApp::NavCore);
 
 use Catalyst;
 
@@ -32,7 +31,7 @@ __PACKAGE__->config(
     title => $TITLE,
     nav_title => 'MIME Cas Store',
     #dashboard_template => 'templates/dashboard.tt',
-    banner_template => 'templates/rapidapp/simple_auth_banner.tt',
+    #banner_template => 'templates/rapidapp/simple_auth_banner.tt',
     dbic_models => ['Schema'],
     hide_fk_columns => 1,
     configs => {
