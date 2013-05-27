@@ -14,7 +14,7 @@ my @plugins = qw(
     RapidApp::RapidDbic
 );
 
-#push @plugins, qw(RapidApp::AuthCore);
+push @plugins, qw(RapidApp::AuthCore);
 push @plugins, qw(RapidApp::NavCore);
 #push @plugins, qw(RapidApp::RequestLogger);
 
@@ -34,15 +34,39 @@ __PACKAGE__->config(
     nav_title => 'MIME Cas Store',
     #dashboard_template => 'templates/dashboard.tt',
     #banner_template => 'templates/rapidapp/simple_auth_banner.tt',
-    dbic_models => ['Schema'],
+    dbic_models => ['Schema','RapidApp::CoreSchema'],
     hide_fk_columns => 1,
     configs => {
+      'RapidApp::CoreSchema' => {
+        grid_params => {
+          '*defaults' => {
+            updatable_colspec => ['*'],
+            creatable_colspec => ['*'],
+            destroyable_relspec => ['*'],
+            #cache_total_count => 0
+          },
+          Role => {
+            no_page => 1,
+            persist_immediately => {
+              create => \0,
+              update => \0,
+              destroy	=> \0
+            },
+            extra_extconfig => { use_add_form => \0 }
+          }
+        }
+      },
+    
       Schema => {
         grid_params => {
           '*defaults' => {
             include_colspec => ['*', '*.*'],
-            cache_total_count => 0 #<-- turn this off while lots of data is changing
+            #cache_total_count => 0 #<-- turn this off while lots of data is changing
           },
+          MailMessage => {
+            include_colspec => ['*', '*.*', 'sha1.mime_attribute.*'],
+          
+          }
         },
         virtual_columns => {
           MimeObject => {

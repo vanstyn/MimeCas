@@ -125,12 +125,12 @@ __PACKAGE__->belongs_to(
 # Created by DBIx::Class::Schema::Loader v0.07010 @ 2013-05-26 19:11:03
 # DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:1XhG+cvjmtfE04u+iCBjmA
 
-__PACKAGE__->belongs_to(
-  "attribute",
-  "MimeCas::Schema::Result::MimeAttribute",
-  { sha1 => "sha1" },
-  { is_deferrable => 1, on_delete => "CASCADE", on_update => "CASCADE" },
-);
+#__PACKAGE__->belongs_to(
+#  "attribute",
+#  "MimeCas::Schema::Result::MimeAttribute",
+#  { sha1 => "sha1" },
+#  { is_deferrable => 1, on_delete => "CASCADE", on_update => "CASCADE" },
+#);
 
 # You can replace this text with custom code or comments, and it will be preserved on regeneration
 __PACKAGE__->meta->make_immutable;

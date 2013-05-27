@@ -60,7 +60,7 @@ sub process_dir {
       &process_dir($child);
     }
     else {
-      print "\r  --> Importing MIME file " . ++$i;
+      print "\r  --> Importing MIME file " . ++$i . " ($child)";
       try {
         my $content = $child->slurp;
         my $MimeRow = $MimeRs->store_mime($content);
