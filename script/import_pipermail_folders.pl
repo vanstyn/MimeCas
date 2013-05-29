@@ -25,22 +25,27 @@ use Getopt::Long;
 my $Rs = MimeCas->model('Schema::Mailbox');
 my $MimeRs = MimeCas->model('Schema::MimeObject');
 
-my ($mailbox_name,$url);
+my ($urls,$folder_regex,$clear_folder,$clear_mailbox);
 GetOptions(
-  'mailbox_name=s' => \$mailbox_name,
-  'url=s' => \$url,
+  # comma sep list of pipermail archive urls
+  'urls=s' => \$urls,
+  
+  # Regex to match to include a folder (applied to month filename)
+  'folder_regex=s' => \$folder_regex,
+  
+  # Whether or not to clear existing folder
+  'clear_folder+' => \$clear_folder,
+  
+  # Whether or not to clear existing mailbox
+  'clear_mailbox+' => \$clear_mailbox
 );
-die "--url required\n" unless ($url);
+die "--urls required\n" unless ($urls);
+my @urls = split(/\,/,$urls);
 
-sub get_link_name {
-  my $link = shift;
-  $link =~ s/\/$//;
-  my @parts = split(/\//,$link);
-  return pop @parts;
+if($folder_regex) {
+  $folder_regex =~ s/^\///;
+  $folder_regex =~ s/\/$//;
 }
-
-$mailbox_name ||= get_link_name($url);
-
 
 my $cleanup = 0;
 
@@ -61,23 +66,13 @@ END {
   }
 }
 
-$url .= '/' unless ($url =~ /\/$/); # <-- ensure trailing slash
-my $html = io($url)->slurp;
 
-my $Mailbox = 
-  $Rs->search_rs({ name => $mailbox_name })->first ||
-  $Rs->create({ name => $mailbox_name });
-
-# Suck out all the link targets:
-my @link_urls = ();
-my $parser = HTML::TokeParser::Simple->new(\$html);
-while (my $tag = $parser->get_tag) {
-  push @link_urls, $tag->get_attr('href') if($tag->is_tag('a')); 
+sub get_link_name {
+  my $link = shift;
+  $link =~ s/\/$//;
+  my @parts = split(/\//,$link);
+  return pop @parts;
 }
-
-# Now get all the .txt.gz links and make them absolute
-my @abs_gz_links = map { "$url$_"} grep { $_ =~ /\.txt\.gz$/ } @link_urls;
-
 
 
 
@@ -118,128 +113,80 @@ sub extract_link_messages {
   return @messages;
 }
 
+sub process_archive_url {
+  my $url = shift;
 
-foreach my $link (@abs_gz_links) {
-  
-  my @messages = extract_link_messages($link);
-  
-  my $folder_name = get_link_name($link);
-  print "Processing $folder_name\n";
-  
-  my $create = { 
-    name => $folder_name,
-    mailbox_id => $Mailbox->get_column('id')
-  };
-  
-  my $Folder = 
-    $Mailbox->mail_folders->search_rs($create)->first ||
-    $Mailbox->mail_folders->create($create);
-  
-  my $i = 0;
-  for my $msg (@messages) {
-    my $MIME = Email::MIME->new($msg);
-    $MIME->content_type_set( 'text/plain' ) unless ($MIME->content_type);
+  my $mailbox_name = get_link_name($url);
+
+  $url .= '/' unless ($url =~ /\/$/); # <-- ensure trailing slash
+  my $html = io($url)->slurp;
+
+  my $Mailbox = 
+    $Rs->search_rs({ name => $mailbox_name })->first ||
+    $Rs->create({ name => $mailbox_name });
     
-    print "\r  --> Importing message " . ++$i . " ($link)";
-    try {
-      my $content = $MIME->as_string;
-      my $MimeRow = $MimeRs->store_mime($content);
+  if($clear_mailbox) {
+    $Mailbox->mail_messages->delete;
+    $Mailbox->mail_folders->delete;
+  }
+
+  # Suck out all the link targets:
+  my @link_urls = ();
+  my $parser = HTML::TokeParser::Simple->new(\$html);
+  while (my $tag = $parser->get_tag) {
+    push @link_urls, $tag->get_attr('href') if($tag->is_tag('a')); 
+  }
+
+  # Now get all the .txt.gz links and make them absolute
+  my @abs_gz_links = map { "$url$_"} grep { $_ =~ /\.txt\.gz$/ } @link_urls;
+
+  foreach my $link (@abs_gz_links) {
+    
+    my @messages = extract_link_messages($link);
+    my $folder_name = get_link_name($link);
+    if($folder_regex) {
+      next unless (eval '$folder_name =~ /' . $folder_regex . '/');
+    }
+    
+    print "Processing $folder_name\n";
+    
+    my $create = { 
+      name => $folder_name,
+      mailbox_id => $Mailbox->get_column('id')
+    };
+    
+    my $Folder = 
+      $Mailbox->mail_folders->search_rs($create)->first ||
+      $Mailbox->mail_folders->create($create);
       
-      $Folder->mail_messages->update_or_create({
-        uid => $i,
-        folder_id => $Folder->get_column('id'),
-        sha1 => $MimeRow->get_column('sha1')
-      },{ key => 'folder_id' });
+    $Folder->mail_messages->delete if ($clear_folder);
+    
+    my $i = 0;
+    for my $msg (@messages) {
+      my $MIME = Email::MIME->new($msg);
+      $MIME->content_type_set( 'text/plain' ) unless ($MIME->content_type);
+      
+      print "\r  --> Importing message " . ++$i . " ($link)";
+      try {
+        my $content = $MIME->as_string;
+        my $MimeRow = $MimeRs->store_mime($content);
+        
+        $Folder->mail_messages->update_or_create({
+          uid => $i,
+          folder_id => $Folder->get_column('id'),
+          sha1 => $MimeRow->get_column('sha1')
+        },{ key => 'folder_id' });
+      }
+      catch { warn "$_\n" };
     }
-    catch { warn "$_\n" };
+    
+    print "\n";
   }
-  
-  print "\n";
-}
 
-print "\n\n";
-
-
-__END__
-
-
-
-
-foreach my $link (@abs_gz_links) {
-  io($link) > io($tmp_gz_file);
-  system('gunzip',$tmp_gz_file);
-  
-  my $content = io($tmp_file)->slurp;
-  my @messages = split(/-------------- next part --------------/,$content);
-  
-  for my $message (@messages) {
-    
-    # These things are freakin busted. wtf
-    my $fixed = '';
-    my $in_body = 0;
-    my $in_header = 0;
-    for my $line (split(/\r?\n/,$message)){
-      unless ($in_header) {
-        next if ($line =~ /^\s*$/);
-        $in_header = 1;
-      }
-      if ($in_body) {
-        $fixed .= "$line\n";
-      }
-      else {
-        if ($line =~ /^\s*$/) {
-          $in_body = 1;
-          $fixed .= "\n";
-          next;
-        }
-        # Check that this is a real header:
-        my ($head,$value) = split(/\:/,$line,2);
-        next unless ($head && $value); #<--- has a header/value
-        next if ($head =~ /\s/); #<-- no spaces in header name
-        $fixed .= "$line\n";
-      }
-    }
-    
-    my $MIME = Email::MIME->new($fixed);
-    $MIME->content_type_set( 'text/plain' );
-    
-    print "\r  --> Importing message " . ++$i;
-    try {
-      $Rs->store_mime($MIME->as_string);
-    }
-    catch { warn "$_\n" };
-  
-  }
-  
+  print "\n\n";
 }
 
 
 
-
-use Path::Class 0.32 qw( dir file );
-
-
-
-
-
-
-
-my @files = ();
-push @files, grep { -f $_ } glob($_) for (@ARGV);
-my $tot = scalar(@files);
-print "\n\n";
-
-my $Rs = MimeCas->model('Schema::MimeObject');
-my $i = 0;
-foreach my $file (@files) {
-  print "\r  --> Importing MIME file " . ++$i . " of $tot";
-  try {
-    my $content = file($file)->slurp;
-    $Rs->store_mime($content);
-  }
-  catch { warn "$_\n" };
-}
-
-print "\n\n";
-
+process_archive_url($_) for (@urls);
 

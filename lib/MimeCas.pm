@@ -63,7 +63,7 @@ __PACKAGE__->config(
           '*defaults' => {
             include_colspec => ['*', '*.*'],
             #cache_total_count => 0 #<-- turn this off while lots of data is changing
-            #plugins => ['grid-edit-raw-columns','grid-custom-headers']
+            plugins => ['grid-custom-headers']
           },
           MailMessage => {
             include_colspec => ['*', '*.*', 'sha1.mime_attribute.*'],
@@ -76,7 +76,7 @@ __PACKAGE__->config(
                 data_type => "varchar",
                 is_nullable => 0,
                 size => 255,
-                sql => 'SELECT CONCAT("<a target=\"_blank\" href=\"/mime/view/",CONCAT(self.sha1,"\">View</a>"))'
+                sql => 'SELECT CONCAT("<a target=\"_blank\" href=\"/mime/view/",CONCAT(self.sha1,"\">Open</a>"))'
               },
           }
         },
@@ -99,6 +99,7 @@ __PACKAGE__->config(
             title_multi => 'Mailboxes',
             iconCls => 'icon-database',
             multiIconCls => 'icon-database_table',
+            display_column => 'name'
           },
           MimeAttribute => {
             title => 'Mime Attribute',
