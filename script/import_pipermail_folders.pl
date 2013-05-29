@@ -79,8 +79,13 @@ sub get_link_name {
 sub extract_link_messages {
   my $link = shift;
   
-  io($link) > io($tmp_gz_file);
-  system('gunzip',$tmp_gz_file);
+  if ($link =~ /\.gz$/) {
+    io($link) > io($tmp_gz_file);
+    system('gunzip',$tmp_gz_file);
+  }
+  else {
+    io($link) > io($tmp_file);
+  }
   
   my $idx = 0;
   my @messages;
@@ -137,10 +142,13 @@ sub process_archive_url {
     push @link_urls, $tag->get_attr('href') if($tag->is_tag('a')); 
   }
 
-  # Now get all the .txt.gz links and make them absolute
-  my @abs_gz_links = map { "$url$_"} grep { $_ =~ /\.txt\.gz$/ } @link_urls;
+  # Now get all the .txt.gz or .txt links and make them absolute
+  my @abs_links = map { "$url$_"} grep { 
+    $_ =~ /\.txt\.gz$/ ||
+    $_ =~ /\.txt$/
+  } @link_urls;
 
-  foreach my $link (@abs_gz_links) {
+  foreach my $link (@abs_links) {
     
     my @messages = extract_link_messages($link);
     my $folder_name = get_link_name($link);
