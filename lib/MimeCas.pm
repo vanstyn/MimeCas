@@ -43,7 +43,8 @@ __PACKAGE__->config(
             updatable_colspec => ['*'],
             creatable_colspec => ['*'],
             destroyable_relspec => ['*'],
-            #cache_total_count => 0
+            #cache_total_count => 0,
+            #plugins => ['grid-edit-advanced-config']
           },
           Role => {
             no_page => 1,
@@ -62,6 +63,7 @@ __PACKAGE__->config(
           '*defaults' => {
             include_colspec => ['*', '*.*'],
             #cache_total_count => 0 #<-- turn this off while lots of data is changing
+            #plugins => ['grid-edit-raw-columns','grid-custom-headers']
           },
           MailMessage => {
             include_colspec => ['*', '*.*', 'sha1.mime_attribute.*'],
