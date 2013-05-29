@@ -87,7 +87,7 @@ sub extract_link_messages {
     io($link) > io($tmp_file);
   }
   
-  my $idx = 0;
+  my $idx = -1;
   my @messages;
   
   # Ugly, lame format. Horrible to figure out where one message ends 
@@ -95,11 +95,10 @@ sub extract_link_messages {
   # easlily be injected. This is retarted
   my $last_line;
   reduce {
-    $messages[$idx] //= '';
-    
+  
     if($a =~ /^From/ && $b =~ /From\:/) {
       # We're on the first line of a new message:
-      $idx++;
+      $messages[++$idx] //= '';
     }
     else {
       # Write the line from the *previous* call

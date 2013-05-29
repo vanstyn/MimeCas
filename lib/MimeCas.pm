@@ -34,7 +34,10 @@ __PACKAGE__->config(
     nav_title => 'MIME Cas Store',
     #dashboard_template => 'templates/dashboard.tt',
     #banner_template => 'templates/rapidapp/simple_auth_banner.tt',
-    dbic_models => ['Schema','RapidApp::CoreSchema'],
+    dbic_models => [
+      'Schema',
+      'RapidApp::CoreSchema'
+    ],
     hide_fk_columns => 1,
     configs => {
       'RapidApp::CoreSchema' => {
