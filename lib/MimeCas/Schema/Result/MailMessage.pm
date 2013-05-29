@@ -37,6 +37,13 @@ __PACKAGE__->table("mail_message");
   is_foreign_key: 1
   is_nullable: 0
 
+=head2 mailbox_id
+
+  data_type: 'integer'
+  extra: {unsigned => 1}
+  is_foreign_key: 1
+  is_nullable: 0
+
 =head2 uid
 
   data_type: 'varchar'
@@ -68,6 +75,13 @@ __PACKAGE__->add_columns(
     is_nullable => 0,
   },
   "folder_id",
+  {
+    data_type => "integer",
+    extra => { unsigned => 1 },
+    is_foreign_key => 1,
+    is_nullable => 0,
+  },
+  "mailbox_id",
   {
     data_type => "integer",
     extra => { unsigned => 1 },
@@ -121,9 +135,49 @@ __PACKAGE__->belongs_to(
   { is_deferrable => 1, on_delete => "CASCADE", on_update => "CASCADE" },
 );
 
+=head2 mailbox
 
-# Created by DBIx::Class::Schema::Loader v0.07010 @ 2013-05-26 19:11:03
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:1XhG+cvjmtfE04u+iCBjmA
+Type: belongs_to
+
+Related object: L<MimeCas::Schema::Result::Mailbox>
+
+=cut
+
+__PACKAGE__->belongs_to(
+  "mailbox",
+  "MimeCas::Schema::Result::Mailbox",
+  { id => "mailbox_id" },
+  { is_deferrable => 1, on_delete => "CASCADE", on_update => "CASCADE" },
+);
+
+
+# Created by DBIx::Class::Schema::Loader v0.07010 @ 2013-05-28 21:59:06
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:P7Zlwhrp/cVaXhTw5YpVSg
+
+
+
+sub insert {
+  my $self = shift;
+  $self->_set_extra_columns(@_);
+  return $self->next::method;
+}
+
+sub update {
+  my $self = shift;
+  $self->_set_extra_columns(@_);
+  return $self->next::method;
+}
+
+sub _set_extra_columns {
+  my $self = shift;
+  my $columns = shift;
+	$self->set_inflated_columns($columns) if $columns;
+  
+  # Would rather not need the redundant column in the first place,
+  # but it is needed for the relationship column
+  $self->set_column( mailbox_id => $self->folder->get_column('mailbox_id') );
+}
+
 
 #__PACKAGE__->belongs_to(
 #  "attribute",

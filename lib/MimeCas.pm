@@ -81,7 +81,55 @@ __PACKAGE__->config(
           }
         },
         TableSpecs => {
+          MailFolder => {
+            title => 'Folder',
+            title_multi => 'Folders',
+            iconCls => 'icon-folder',
+            multiIconCls => 'icon-folders',
+            display_column => 'name'
+          },
+          MailMessage => {
+            title => 'Message',
+            title_multi => 'Messages',
+            iconCls => 'icon-mail-earth',
+            multiIconCls => 'icon-mail-earths',
+          },
+          Mailbox => {
+            title => 'Mailbox',
+            title_multi => 'Mailboxes',
+            iconCls => 'icon-database',
+            multiIconCls => 'icon-database_table',
+          },
+          MimeAttribute => {
+            title => 'Mime Attribute',
+            title_multi => 'Mime Attributes',
+            columns => {
+              debug_structure => { 
+                 renderer => jsfunc 'function(v){ return "<pre>" + v + "</pre>"; }' 
+               },
+            }
+          },
+          MimeGraph => {
+            title => 'Mime Graph',
+            title_multi => 'Mime Graphs',
+            iconCls => 'icon-node',
+            multiIconCls => 'icon-nodes',
+            columns => {
+              child_object => { width => 250 },
+              parent_object => { width => 250 },
+            }
+          },
+          MimeHeader => {
+            title => 'Mime Header',
+             title_multi => 'Mime Headers',
+            iconCls => 'icon-news',
+            multiIconCls => 'icon-newspapers',
+          },
           MimeObject => {
+            title => 'Mime Part',
+            title_multi => 'Mime Parts',
+            iconCls => 'icon-email',
+            multiIconCls => 'icon-emails',
             columns => {
               sha1 => { width => 250 },
               content => { 
@@ -97,22 +145,14 @@ __PACKAGE__->config(
               view_link =>  { no_quick_search => \1, no_multifilter => \1, sortable => \0 },
             }
           },
-          MimeGraph => {
-            columns => {
-              child_object => { width => 250 },
-              parent_object => { width => 250 },
-            }
-          },
-          MimeAttribute => {
-            columns => {
-              debug_structure => { 
-                 renderer => jsfunc 'function(v){ return "<pre>" + v + "</pre>"; }' 
-               },
-            }
-          },
-          MailFolder => {
-            display_column => 'name'
+          MimeRecipient => {
+            title => 'Mime Recipient',
+            title_multi => 'Mime Recipients',
+            iconCls => 'icon-user',
+            multiIconCls => 'icon-users',
+          
           }
+
           
         }
       

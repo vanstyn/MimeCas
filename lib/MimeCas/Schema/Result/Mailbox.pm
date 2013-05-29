@@ -83,9 +83,24 @@ __PACKAGE__->has_many(
   { cascade_copy => 0, cascade_delete => 0 },
 );
 
+=head2 mail_messages
 
-# Created by DBIx::Class::Schema::Loader v0.07010 @ 2013-05-19 00:17:53
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:EpFVOkvf7CF9vVtZRj5YZA
+Type: has_many
+
+Related object: L<MimeCas::Schema::Result::MailMessage>
+
+=cut
+
+__PACKAGE__->has_many(
+  "mail_messages",
+  "MimeCas::Schema::Result::MailMessage",
+  { "foreign.mailbox_id" => "self.id" },
+  { cascade_copy => 0, cascade_delete => 0 },
+);
+
+
+# Created by DBIx::Class::Schema::Loader v0.07010 @ 2013-05-28 21:59:06
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:jWJHIdD9bxIb93w8t8ypHg
 
 
 # You can replace this text with custom code or comments, and it will be preserved on regeneration

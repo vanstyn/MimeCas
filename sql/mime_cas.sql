@@ -191,6 +191,8 @@ CREATE TABLE IF NOT EXISTS `mail_message` (
   /* parent folder */
   `folder_id` int(11) unsigned NOT NULL,
   
+  `mailbox_id` int(11) unsigned NOT NULL,
+  
   /* id specific to the folder (like IMAP UID) */
   `uid` varchar(64) NOT NULL,
   
@@ -202,6 +204,7 @@ CREATE TABLE IF NOT EXISTS `mail_message` (
   PRIMARY KEY  (`id`),
   FOREIGN KEY (`folder_id`) REFERENCES `mail_folder` (`id`),
   FOREIGN KEY (`sha1`) REFERENCES `mime_object` (`sha1`),
+  FOREIGN KEY (`mailbox_id`) REFERENCES `mailbox` (`id`),
   UNIQUE KEY (`folder_id`,`uid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
