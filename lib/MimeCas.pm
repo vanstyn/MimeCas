@@ -32,7 +32,7 @@ __PACKAGE__->config(
   'Plugin::RapidApp::RapidDbic' => {
     title => $TITLE,
     nav_title => 'MIME Cas Store',
-    #dashboard_template => 'templates/dashboard.tt',
+    dashboard_template => 'templates/dashboard.tt',
     #banner_template => 'templates/rapidapp/simple_auth_banner.tt',
     dbic_models => [
       'Schema',
