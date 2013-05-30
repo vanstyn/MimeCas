@@ -41,7 +41,13 @@ __PACKAGE__->table("mailbox");
 
   data_type: 'varchar'
   is_nullable: 0
-  size: 255
+  size: 128
+
+=head2 description
+
+  data_type: 'varchar'
+  is_nullable: 1
+  size: 512
 
 =cut
 
@@ -61,7 +67,9 @@ __PACKAGE__->add_columns(
     size => 255,
   },
   "name",
-  { data_type => "varchar", is_nullable => 0, size => 255 },
+  { data_type => "varchar", is_nullable => 0, size => 128 },
+  "description",
+  { data_type => "varchar", is_nullable => 1, size => 512 },
 );
 __PACKAGE__->set_primary_key("id");
 __PACKAGE__->add_unique_constraint("realm", ["realm", "name"]);
@@ -99,8 +107,8 @@ __PACKAGE__->has_many(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07010 @ 2013-05-28 21:59:06
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:jWJHIdD9bxIb93w8t8ypHg
+# Created by DBIx::Class::Schema::Loader v0.07010 @ 2013-05-29 22:08:53
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:CRZOJcxVnfrW/6Zi0zpXCw
 
 
 # You can replace this text with custom code or comments, and it will be preserved on regeneration

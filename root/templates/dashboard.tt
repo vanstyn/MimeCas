@@ -86,11 +86,11 @@
 
 <h2>What is MimeCas?</h2>
 
-<p>MimeCas is a simple DBIC schema/data-model for storing <a href="http://en.wikipedia.org/wiki/MIME">MIME</a> objects. MIME obkects are E-Mail messages, images, content parts and other types of attachments. The word "Cas" is in the name because it uses a <a href="http://en.wikipedia.org/wiki/Content_addressed_storage">Content-Addressed Storage</a> design to store the MIME objects, similar to <a href="http://git-scm.com/">Git</a>. In a CAS database the keys are checksums of content, which provides many intrensic benefets, such as automatic de-duplication, global namespaces and elimination of caching issues.</p>
+<p>MimeCas is a simple DBIC schema/data-model for storing <a target="_blank" href="http://en.wikipedia.org/wiki/MIME">MIME</a> objects. MIME objects are E-Mail messages, images, content parts and other types of attachments. The word "Cas" is in the name because it uses a <a target="_blank" href="http://en.wikipedia.org/wiki/Content_addressed_storage">Content-Addressed Storage</a> design to store the MIME objects, similar to <a target="_blank" href="http://git-scm.com/">Git</a>. In a CAS database the keys are checksums of content, which provides many intrensic benefets, such as automatic de-duplication, global namespaces and elimination of caching issues.</p>
 
 <p>Individual MIME "Parts" are stored according to their SHA1 checksum. Multipart MIME objects contain referecnes to the SHA1s of their subparts, rather than the actual content. This creates a tree structure much like the structure of Git commits and tree (directory) objects.</p>
 
-<p>If you are not familiar Git's wonderful design and Content-Addressed Storage concepts, I suggest you read my Linux Jounral Article on the topic: <a href="http://www.linuxjournal.com/content/git-revision-control-perfected">Git - Revision Control Perfected</a> (2011)</p>
+<p>If you are not familiar Git's wonderful design and Content-Addressed Storage concepts, I suggest you read my Linux Jounral Article on the topic: <a target="_blank" href="http://www.linuxjournal.com/content/git-revision-control-perfected">Git - Revision Control Perfected</a> (2011)</p>
 
 <p>In addition to the core MIME storage model, there is also a Mailbox/Folder/Message structure that provides a context for the objects. </p>
 
@@ -116,7 +116,7 @@ This document is just a starter and is by no means complete
 Henry Van Styn <br>
 <a href="mailto:vanstyn@cpan.org">vanstyn@cpan.org</a><br>
 IntelliTree Solutions<br>
-<a href="http://www.intellitree.com">www.intellitree.com</a>
+<a target="_blank" href="http://www.intellitree.com">www.intellitree.com</a>
 
 
 </div>

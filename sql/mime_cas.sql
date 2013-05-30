@@ -156,7 +156,9 @@ CREATE TABLE IF NOT EXISTS `mailbox` (
   
   /* TODO: add other desired mailbox attributes/info */
   
-  `name` varchar(255) NOT NULL,
+  `name` varchar(128) NOT NULL,
+  
+  `description` varchar(512) DEFAULT NULL,
   
   PRIMARY KEY (`id`),
   UNIQUE KEY (`realm`,`name`)

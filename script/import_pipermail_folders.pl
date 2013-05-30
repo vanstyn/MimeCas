@@ -127,7 +127,10 @@ sub process_archive_url {
 
   my $Mailbox = 
     $Rs->search_rs({ name => $mailbox_name })->first ||
-    $Rs->create({ name => $mailbox_name });
+    $Rs->create({ 
+      name => $mailbox_name, 
+      description => $url
+    });
     
   if($clear_mailbox) {
     $Mailbox->mail_messages->delete;
