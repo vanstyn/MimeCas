@@ -10,6 +10,7 @@ script/mimecas_create.pl model Schema \
 # regenerate:
 dbicdump -o dump_directory=./lib MimeCas::Schema \
   -o debug=1 -o rescan=1 -o use_moose=1 -o components='["InflateColumn::DateTime"]' \
+  -o generate_pod=0 \
   dbi:mysql:mime_cas root ''
 
 # set 'quote_names => 1' in the DBIC model connect_info

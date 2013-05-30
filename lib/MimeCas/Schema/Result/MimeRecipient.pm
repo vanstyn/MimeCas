@@ -12,46 +12,7 @@ use namespace::autoclean;
 extends 'DBIx::Class::Core';
 
 __PACKAGE__->load_components("InflateColumn::DateTime");
-
-=head1 NAME
-
-MimeCas::Schema::Result::MimeRecipient
-
-=cut
-
 __PACKAGE__->table("mime_recipient");
-
-=head1 ACCESSORS
-
-=head2 sha1
-
-  data_type: 'char'
-  is_foreign_key: 1
-  is_nullable: 0
-  size: 40
-
-=head2 order
-
-  data_type: 'tinyint'
-  default_value: 0
-  extra: {unsigned => 1}
-  is_nullable: 0
-
-=head2 addr
-
-  data_type: 'varchar'
-  is_nullable: 0
-  size: 255
-
-=head2 cc
-
-  data_type: 'tinyint'
-  default_value: 0
-  extra: {unsigned => 1}
-  is_nullable: 0
-
-=cut
-
 __PACKAGE__->add_columns(
   "sha1",
   { data_type => "char", is_foreign_key => 1, is_nullable => 0, size => 40 },
@@ -73,17 +34,6 @@ __PACKAGE__->add_columns(
   },
 );
 __PACKAGE__->set_primary_key("sha1", "addr");
-
-=head1 RELATIONS
-
-=head2 sha1
-
-Type: belongs_to
-
-Related object: L<MimeCas::Schema::Result::MimeObject>
-
-=cut
-
 __PACKAGE__->belongs_to(
   "sha1",
   "MimeCas::Schema::Result::MimeObject",
@@ -92,8 +42,8 @@ __PACKAGE__->belongs_to(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07010 @ 2013-05-19 00:17:53
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:v3zl8Tpj8L/yb4rovGMngA
+# Created by DBIx::Class::Schema::Loader v0.07010 @ 2013-05-30 13:56:27
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:0Nkj7fwAW/cRW7BDWTtqfA
 
 
 # You can replace this text with custom code or comments, and it will be preserved on regeneration
