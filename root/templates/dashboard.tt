@@ -42,28 +42,43 @@
 
 <p>This schema is just an example to showcase a DBIC schema that can be loaded with some nice test data (E-Mails). It has been loaded with "Mailboxes" referencing various mailing lists, with "Folders" representing Individual monthly Pipermail archive files containing "Messages"</p>
 
+<div style="padding:10px;">
+  <h4>Result Classes</h4>
 
-<br>
+  <ul>
+  [% FOREACH s IN c.model('Schema').schema.sources() %]
 
-<h1>In Progress!</h1>
+  <li><b>
+  <a href="#!/main/page?file=lib/MimeCas/Schema/Result/[% s %].pm">[% s %].pm</a>
+  </b>
+  </li>
+  [% END %]
+  </ul>
+</div>
 
-This document is just a starter and is by no means complete
+<h2>Application Config</h2>
 
+This application config is automatically generated using the "RapidDbic" Catalyst plugin which automatically sets up Grid views and object pages for super-fast setup. Besides the above Schema classes and associated Catalyst DBIC model (generated using S::L), the entire configuration of this application is contained in the main Catalyst class/package file:
 
-<h1>Getting RapidApp</h1>
+<ul><li><b>
+<a href="#!/main/page?file=lib/MimeCas.pm">lib/MimeCas.pm</a>
+</b>
+</li></ul>
 
-<p>RapidApp is still under development and there are many tasks and refactoring yet to be done. While it is fully functional today, and we have developed a number of very successful projects using it over the past several years, the API is not yet finalized and there are still some things in flux that has stopped us from officially releasing it to the world. However, I am happy to provide the code to anyone that is interested.</p>
+<p>There is also one Controller that is specific to this application which provides the MIME viewer ('View' links). This is a pure-Catalyst controller and is not specific to RapidApp:</p>
 
-<p>We started developing RapidApp for our own in-house use and are now actively working on making a public release to give back to the community. This is a lot of work! Besides the remaining coding tasks and finalization of the API, there is lots of documentation to write. If you are interested in getting involved or helping us finish the public release, contact me below!</p>
+<ul>
+<li><b>
+<a href="#!/main/page?file=lib/MimeCas/Controller/Mime.pm">lib/MimeCas/Controller/Mime.pm</a>
+</b>
+</li>
+<li><b>
+<a href="#!/main/page?file=lib/Catalyst/Controller/MIME.pm">lib/Catalyst/Controller/MIME.pm</a>
+</b>
+</li>
+</ul>
 
-
-<h1>Author</h1>
-
-Henry Van Styn <br>
-<a href="mailto:vanstyn@cpan.org">vanstyn@cpan.org</a><br>
-IntelliTree Solutions<br>
-<a target="_blank" href="http://www.intellitree.com">www.intellitree.com</a>
-
+<br><br>
 
 </div>
 
