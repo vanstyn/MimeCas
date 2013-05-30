@@ -33,6 +33,7 @@ __PACKAGE__->config(
     title => $TITLE,
     nav_title => 'MIME Cas Store',
     dashboard_template => 'templates/dashboard.tt',
+    page_view_dir => 'root/pages',
     #banner_template => 'templates/rapidapp/simple_auth_banner.tt',
     dbic_models => [
       'Schema',
