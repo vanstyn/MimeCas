@@ -20,14 +20,26 @@ push @plugins, qw(RapidApp::NavCore);
 
 use Catalyst;
 
-our $VERSION = '0.01';
+our $VERSION = '0.02';
 our $TITLE = "MimeCas v" . $VERSION;
+
 
 
 __PACKAGE__->config(
   name => 'MimeCas',
   # Disable deprecated behavior needed by old applications
   disable_component_resolution_regex_fallback => 1,
+  
+  'Plugin::AutoAssets' => { assets => [
+    {
+      controller => 'A::Img',
+      type => 'IconSet',
+      include => 'root/static/images',
+      allow_static_requests => 1
+    
+    }
+  ]},
+  
 
   'Plugin::RapidApp::RapidDbic' => {
     title => $TITLE,
@@ -102,7 +114,7 @@ __PACKAGE__->config(
             title => 'Mailbox',
             title_multi => 'Mailboxes',
             iconCls => 'icon-database',
-            multiIconCls => 'icon-database_table',
+            multiIconCls => 'icon-database-table',
             display_column => 'name'
           },
           MimeAttribute => {

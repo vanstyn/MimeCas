@@ -1,4 +1,3 @@
 *.db
 ext-*
-root/autoassets*
 test_mime_data/
