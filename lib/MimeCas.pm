@@ -3,9 +3,8 @@ use Moose;
 use namespace::autoclean;
 
 use Catalyst::Runtime 5.80;
+use RapidApp 0.99001;
 
-use FindBin;
-use lib "$FindBin::Bin/../rapidapp/lib";
 use RapidApp::Include qw(sugar perlutil);
 
 my @plugins = qw(
@@ -20,10 +19,8 @@ push @plugins, qw(RapidApp::NavCore);
 
 use Catalyst;
 
-our $VERSION = '0.02';
+our $VERSION = '0.03';
 our $TITLE = "MimeCas v" . $VERSION;
-
-
 
 __PACKAGE__->config(
   name => 'MimeCas',
