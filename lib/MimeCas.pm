@@ -3,7 +3,7 @@ use Moose;
 use namespace::autoclean;
 
 use Catalyst::Runtime 5.80;
-use RapidApp 0.99001;
+use RapidApp 0.99004;
 
 use RapidApp::Include qw(sugar perlutil);
 
@@ -19,13 +19,15 @@ push @plugins, qw(RapidApp::NavCore);
 
 use Catalyst;
 
-our $VERSION = '0.03';
+our $VERSION = '0.05';
 our $TITLE = "MimeCas v" . $VERSION;
 
 __PACKAGE__->config(
   name => 'MimeCas',
   # Disable deprecated behavior needed by old applications
   disable_component_resolution_regex_fallback => 1,
+  
+  extjs_dir => '/root/RapidApp_Demos/ext-3.4.1',
   
   'Plugin::AutoAssets' => { assets => [
     {
