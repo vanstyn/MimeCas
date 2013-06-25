@@ -2,6 +2,8 @@ package MimeCas::Controller::Mime;
 use Moose;
 use namespace::autoclean;
 
+use Catalyst::Controller::MIME 0.01;
+
 BEGIN {extends 'Catalyst::Controller::MIME'; }
 
 has '+expose_methods', default => 1;

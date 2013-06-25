@@ -3,7 +3,7 @@ use Moose;
 use namespace::autoclean;
 
 use Catalyst::Runtime 5.80;
-use RapidApp 0.99004;
+use RapidApp 0.99005;
 
 use RapidApp::Include qw(sugar perlutil);
 
