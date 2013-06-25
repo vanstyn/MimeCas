@@ -28,7 +28,7 @@ __PACKAGE__->add_columns(
     is_foreign_key => 1,
     is_nullable => 1,
   },
-  "order",
+  "ordering",
   {
     data_type => "tinyint",
     default_value => 0,
@@ -54,8 +54,8 @@ __PACKAGE__->belongs_to(
   {
     is_deferrable => 1,
     join_type     => "LEFT",
-    on_delete     => "CASCADE",
-    on_update     => "CASCADE",
+    #on_delete     => "CASCADE",
+    #on_update     => "CASCADE",
   },
 );
 __PACKAGE__->has_many(
@@ -68,7 +68,7 @@ __PACKAGE__->belongs_to(
   "mailbox",
   "MimeCas::Schema::Result::Mailbox",
   { id => "mailbox_id" },
-  { is_deferrable => 1, on_delete => "CASCADE", on_update => "CASCADE" },
+  { is_deferrable => 1, }, #on_delete => "CASCADE", on_update => "CASCADE" },
 );
 __PACKAGE__->has_many(
   "mail_messages",

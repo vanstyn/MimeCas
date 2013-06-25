@@ -47,7 +47,7 @@ __PACKAGE__->belongs_to(
   "sha1",
   "MimeCas::Schema::Result::MimeObject",
   { sha1 => "sha1" },
-  { is_deferrable => 1, on_delete => "CASCADE", on_update => "CASCADE" },
+  { is_deferrable => 1, }, #on_delete => "CASCADE", on_update => "CASCADE" },
 );
 
 

@@ -16,7 +16,7 @@ __PACKAGE__->table("mime_recipient");
 __PACKAGE__->add_columns(
   "sha1",
   { data_type => "char", is_foreign_key => 1, is_nullable => 0, size => 40 },
-  "order",
+  "ordering",
   {
     data_type => "tinyint",
     default_value => 0,
@@ -38,7 +38,7 @@ __PACKAGE__->belongs_to(
   "sha1",
   "MimeCas::Schema::Result::MimeObject",
   { sha1 => "sha1" },
-  { is_deferrable => 1, on_delete => "CASCADE", on_update => "CASCADE" },
+  { is_deferrable => 1, }, #on_delete => "CASCADE", on_update => "CASCADE" },
 );
 
 

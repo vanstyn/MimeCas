@@ -87,7 +87,7 @@ sub store_mime {
       $content .= "$child_sha1\n";
       push @children, $child_sha1;
     }
-    my $order = 0;
+    my $ordering = 0;
     my $direct_children = scalar(@children);
     my $all_children = $direct_children + $grand_children;
     return $self->_find_or_create_mime_row({
@@ -96,7 +96,7 @@ sub store_mime {
       all_children => $all_children,
       child_objects => [
         # TODO: sometimes this rel/sub insert encounters duplicates... how/why?
-        map {{ child_sha1 => $_, order => $order++ }} @children
+        map {{ child_sha1 => $_, ordering => $ordering++ }} @children
       ],
       %create
     },$MIME);
@@ -160,7 +160,7 @@ sub get_headers_packet {
       sha1 => $sha1,
       name => lc($name),
       value => $value,
-      order => $header_ord++
+      ordering => $header_ord++
     };
   }
 
@@ -200,14 +200,14 @@ sub get_mime_recipients_packet {
   push @$mime_recipients, {
     sha1 => $sha1,
     addr => lc($_->address),
-    order => $recipient_ord++
+    ordering => $recipient_ord++
   } for (@to);
   
   push @$mime_recipients, {
     sha1 => $sha1,
     addr => lc($_->address),
     cc => 1,
-    order => $recipient_ord++
+    ordering => $recipient_ord++
   } for (@cc);
   
   return $mime_recipients;

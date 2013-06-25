@@ -37,7 +37,7 @@ __PACKAGE__->add_columns(
   },
   "uid",
   { data_type => "varchar", is_nullable => 0, size => 64 },
-  "order",
+  "ordering",
   {
     data_type => "tinyint",
     default_value => 0,
@@ -53,19 +53,19 @@ __PACKAGE__->belongs_to(
   "folder",
   "MimeCas::Schema::Result::MailFolder",
   { id => "folder_id" },
-  { is_deferrable => 1, on_delete => "CASCADE", on_update => "CASCADE" },
+  { is_deferrable => 1, }, #on_delete => "CASCADE", on_update => "CASCADE" },
 );
 __PACKAGE__->belongs_to(
   "sha1",
   "MimeCas::Schema::Result::MimeObject",
   { sha1 => "sha1" },
-  { is_deferrable => 1, on_delete => "CASCADE", on_update => "CASCADE" },
+  { is_deferrable => 1, }, #on_delete => "CASCADE", on_update => "CASCADE" },
 );
 __PACKAGE__->belongs_to(
   "mailbox",
   "MimeCas::Schema::Result::Mailbox",
   { id => "mailbox_id" },
-  { is_deferrable => 1, on_delete => "CASCADE", on_update => "CASCADE" },
+  { is_deferrable => 1, }, #on_delete => "CASCADE", on_update => "CASCADE" },
 );
 
 
@@ -101,7 +101,7 @@ sub _set_extra_columns {
 #  "attribute",
 #  "MimeCas::Schema::Result::MimeAttribute",
 #  { sha1 => "sha1" },
-#  { is_deferrable => 1, on_delete => "CASCADE", on_update => "CASCADE" },
+#  { is_deferrable => 1, }, #on_delete => "CASCADE", on_update => "CASCADE" },
 #);
 
 # You can replace this text with custom code or comments, and it will be preserved on regeneration

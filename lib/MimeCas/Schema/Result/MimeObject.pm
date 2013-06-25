@@ -107,7 +107,7 @@ sub Mime {
   my $MIME = Email::MIME->new($self->content);
   if ($self->direct_children > 0) {
     my $GraphRs = $self->child_objects->search_rs(undef,{
-      order_by => { '-asc' => 'order' }
+      order_by => { '-asc' => 'ordering' }
     });
     my @parts = map { $_->child_sha1->Mime } ($GraphRs->all);
     $MIME->parts_set( \@parts );

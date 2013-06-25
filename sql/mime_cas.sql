@@ -49,7 +49,7 @@ DROP TABLE IF EXISTS `mime_graph`;
 CREATE TABLE IF NOT EXISTS `mime_graph` (
   `child_sha1` char(40) NOT NULL,
   `parent_sha1` char(40) NOT NULL,
-  `order` tinyint unsigned NOT NULL DEFAULT 0,
+  `ordering` tinyint unsigned NOT NULL DEFAULT 0,
   PRIMARY KEY  (`child_sha1`,`parent_sha1`),
   FOREIGN KEY (`child_sha1`) REFERENCES `mime_object` (`sha1`),
   FOREIGN KEY (`parent_sha1`) REFERENCES `mime_object` (`sha1`)
@@ -107,7 +107,7 @@ CREATE TABLE IF NOT EXISTS `mime_attribute` (
 DROP TABLE IF EXISTS `mime_header`;
 CREATE TABLE IF NOT EXISTS `mime_header` (
   `sha1` char(40) NOT NULL,
-  `order` tinyint unsigned NOT NULL DEFAULT 0,
+  `ordering` tinyint unsigned NOT NULL DEFAULT 0,
   
   /* name should be normalized/lowercased. This is just an index; the original
    headers can always be retrieved from the original MIME content */
@@ -115,9 +115,9 @@ CREATE TABLE IF NOT EXISTS `mime_header` (
   `value` varchar(1024) NOT NULL,
   
   /* Since there can be multiple headers of the same name, our primary key 
-   is the sha1 + order which is essentially an array/list instead of a
+   is the sha1 + ordering which is essentially an array/list instead of a
    hash/object */
-  PRIMARY KEY  (`sha1`,`order`),
+  PRIMARY KEY  (`sha1`,`ordering`),
   
   KEY (`name`),
   FOREIGN KEY (`sha1`) REFERENCES `mime_object` (`sha1`)
@@ -128,7 +128,7 @@ CREATE TABLE IF NOT EXISTS `mime_header` (
 DROP TABLE IF EXISTS `mime_recipient`;
 CREATE TABLE IF NOT EXISTS `mime_recipient` (
   `sha1` char(40) NOT NULL,
-  `order` tinyint unsigned NOT NULL DEFAULT 0,
+  `ordering` tinyint unsigned NOT NULL DEFAULT 0,
   
   /* normalized/lowercased  */
   `addr` varchar(255) NOT NULL,
@@ -170,7 +170,7 @@ CREATE TABLE IF NOT EXISTS `mail_folder` (
   
   /* parent folder. Only root folders should be null */
   `parent_id` int(11) unsigned DEFAULT NULL,
-  `order` tinyint unsigned NOT NULL DEFAULT 0,
+  `ordering` tinyint unsigned NOT NULL DEFAULT 0,
   
   /* This could also be an ID to a mailbox table with 
    addition realm/context infp */
@@ -198,7 +198,7 @@ CREATE TABLE IF NOT EXISTS `mail_message` (
   /* id specific to the folder (like IMAP UID) */
   `uid` varchar(64) NOT NULL,
   
-  `order` tinyint unsigned NOT NULL DEFAULT 0,
+  `ordering` tinyint unsigned NOT NULL DEFAULT 0,
   
   /* CAS address of the content */
   `sha1` char(40) NOT NULL,
