@@ -1,0 +1,290 @@
+PRAGMA foreign_keys=OFF;
+BEGIN TRANSACTION;
+CREATE TABLE default_view (
+  source_model varchar(255) NOT NULL,
+  view_id integer,
+  PRIMARY KEY (source_model),
+  FOREIGN KEY (view_id) REFERENCES saved_state(id) ON DELETE CASCADE ON UPDATE CASCADE
+);
+INSERT INTO "default_view" VALUES('Schema::Mailbox',2);
+INSERT INTO "default_view" VALUES('Schema::MimeHeader',NULL);
+INSERT INTO "default_view" VALUES('Schema::MailMessage',1);
+INSERT INTO "default_view" VALUES('Schema::MimeObject',NULL);
+INSERT INTO "default_view" VALUES('Schema::MimeAttribute',NULL);
+INSERT INTO "default_view" VALUES('Schema::MailFolder',3);
+INSERT INTO "default_view" VALUES('Schema::MimeRecipient',NULL);
+INSERT INTO "default_view" VALUES('Schema::MimeGraph',NULL);
+INSERT INTO "default_view" VALUES('RapidApp::CoreSchema::DefaultView',NULL);
+INSERT INTO "default_view" VALUES('RapidApp::CoreSchema::SavedState',NULL);
+INSERT INTO "default_view" VALUES('RapidApp::CoreSchema::Role',NULL);
+INSERT INTO "default_view" VALUES('RapidApp::CoreSchema::User',NULL);
+INSERT INTO "default_view" VALUES('RapidApp::CoreSchema::DeployInfo',NULL);
+INSERT INTO "default_view" VALUES('RapidApp::CoreSchema::UserToRole',NULL);
+INSERT INTO "default_view" VALUES('RapidApp::CoreSchema::NavtreeNodeToRole',NULL);
+INSERT INTO "default_view" VALUES('RapidApp::CoreSchema::Session',NULL);
+INSERT INTO "default_view" VALUES('RapidApp::CoreSchema::Request',NULL);
+INSERT INTO "default_view" VALUES('RapidApp::CoreSchema::NavtreeNode',NULL);
+CREATE TABLE deploy_info (
+  md5 char(32) NOT NULL,
+  schema_class varchar(128) NOT NULL,
+  schema_version varchar(16) NOT NULL,
+  comment varchar(255) NOT NULL,
+  deployed_ddl mediumtext NOT NULL,
+  deployed_ts datetime NOT NULL,
+  PRIMARY KEY (md5)
+);
+INSERT INTO "deploy_info" VALUES('b3aa3204210aef3b39566f9241879996','RapidApp::CoreSchema','1','DO NOT REMOVE THIS ROW','-- 
+-- Created by SQL::Translator::Producer::SQLite
+-- Created on Tue Jun 25 08:54:53 2013
+-- 
+
+BEGIN TRANSACTION;
+
+--
+-- Table: default_view
+--
+CREATE TABLE default_view (
+  source_model varchar(255) NOT NULL,
+  view_id integer,
+  PRIMARY KEY (source_model),
+  FOREIGN KEY (view_id) REFERENCES saved_state(id) ON DELETE CASCADE ON UPDATE CASCADE
+);
+
+CREATE INDEX default_view_idx_view_id ON default_view (view_id);
+
+--
+-- Table: deploy_info
+--
+CREATE TABLE deploy_info (
+  md5 char(32) NOT NULL,
+  schema_class varchar(128) NOT NULL,
+  schema_version varchar(16) NOT NULL,
+  comment varchar(255) NOT NULL,
+  deployed_ddl mediumtext NOT NULL,
+  deployed_ts datetime NOT NULL,
+  PRIMARY KEY (md5)
+);
+
+--
+-- Table: navtree_node
+--
+CREATE TABLE navtree_node (
+  id INTEGER PRIMARY KEY NOT NULL,
+  pid integer DEFAULT 0,
+  text varchar(255) NOT NULL,
+  iconcls varchar(255),
+  expanded tinyint,
+  ordering integer NOT NULL DEFAULT 500000,
+  FOREIGN KEY (pid) REFERENCES navtree_node(id) ON DELETE CASCADE ON UPDATE CASCADE
+);
+
+CREATE INDEX navtree_node_idx_pid ON navtree_node (pid);
+
+--
+-- Table: navtree_node_to_role
+--
+CREATE TABLE navtree_node_to_role (
+  node_id integer NOT NULL,
+  role varchar(64) NOT NULL,
+  PRIMARY KEY (node_id, role),
+  FOREIGN KEY (node_id) REFERENCES navtree_node(id) ON DELETE CASCADE ON UPDATE CASCADE,
+  FOREIGN KEY (role) REFERENCES role(role) ON DELETE CASCADE ON UPDATE CASCADE
+);
+
+CREATE INDEX navtree_node_to_role_idx_node_id ON navtree_node_to_role (node_id);
+
+CREATE INDEX navtree_node_to_role_idx_role ON navtree_node_to_role (role);
+
+--
+-- Table: request
+--
+CREATE TABLE request (
+  id INTEGER PRIMARY KEY NOT NULL,
+  user_id integer,
+  timestamp timestamp NOT NULL DEFAULT current_timestamp,
+  client_ip varchar(16) NOT NULL,
+  client_hostname varchar(255),
+  uri varchar(512) NOT NULL,
+  method varchar(8) NOT NULL,
+  user_agent varchar(1024),
+  referer varchar(512),
+  serialized_request text,
+  FOREIGN KEY (user_id) REFERENCES user(id) ON DELETE CASCADE ON UPDATE CASCADE
+);
+
+CREATE INDEX request_idx_user_id ON request (user_id);
+
+--
+-- Table: role
+--
+CREATE TABLE role (
+  id INTEGER PRIMARY KEY NOT NULL,
+  role varchar(64) NOT NULL,
+  description varchar(255) NOT NULL
+);
+
+CREATE UNIQUE INDEX role02 ON role (role);
+
+--
+-- Table: saved_state
+--
+CREATE TABLE saved_state (
+  id INTEGER PRIMARY KEY NOT NULL,
+  title varchar(255) NOT NULL,
+  subtitle varchar(1024),
+  node_id integer,
+  user_id integer,
+  ordering integer NOT NULL DEFAULT 500001,
+  iconcls varchar(255),
+  url varchar(255) NOT NULL,
+  params text,
+  state_data text,
+  FOREIGN KEY (node_id) REFERENCES navtree_node(id) ON DELETE CASCADE ON UPDATE CASCADE,
+  FOREIGN KEY (user_id) REFERENCES user(id) ON DELETE CASCADE ON UPDATE CASCADE
+);
+
+CREATE INDEX saved_state_idx_node_id ON saved_state (node_id);
+
+CREATE INDEX saved_state_idx_user_id ON saved_state (user_id);
+
+--
+-- Table: session
+--
+CREATE TABLE session (
+  id varchar NOT NULL,
+  session_data text,
+  expires integer,
+  expires_ts datetime,
+  user_id integer,
+  PRIMARY KEY (id),
+  FOREIGN KEY (user_id) REFERENCES user(id) ON DELETE CASCADE ON UPDATE CASCADE
+);
+
+CREATE INDEX session_idx_user_id ON session (user_id);
+
+--
+-- Table: user
+--
+CREATE TABLE user (
+  id INTEGER PRIMARY KEY NOT NULL,
+  username varchar(32) NOT NULL,
+  password varchar(255),
+  full_name varchar(255),
+  last_login_ts datetime,
+  disabled tinyint NOT NULL DEFAULT 0,
+  disabled_ts datetime
+);
+
+CREATE UNIQUE INDEX username ON user (username);
+
+--
+-- Table: user_to_role
+--
+CREATE TABLE user_to_role (
+  username varchar(32) NOT NULL,
+  role varchar(64) NOT NULL,
+  PRIMARY KEY (username, role),
+  FOREIGN KEY (role) REFERENCES role(role) ON DELETE CASCADE ON UPDATE CASCADE,
+  FOREIGN KEY (username) REFERENCES user(username) ON DELETE CASCADE ON UPDATE CASCADE
+);
+
+CREATE INDEX user_to_role_idx_role ON user_to_role (role);
+
+CREATE INDEX user_to_role_idx_username ON user_to_role (username);
+
+COMMIT;
+','2013-06-25T08:54:55');
+CREATE TABLE navtree_node (
+  id INTEGER PRIMARY KEY NOT NULL,
+  pid integer DEFAULT 0,
+  text varchar(255) NOT NULL,
+  iconcls varchar(255),
+  expanded tinyint,
+  ordering integer NOT NULL DEFAULT 500000,
+  FOREIGN KEY (pid) REFERENCES navtree_node(id) ON DELETE CASCADE ON UPDATE CASCADE
+);
+INSERT INTO "navtree_node" VALUES(0,NULL,'DUMMY ROOT NODE',NULL,NULL,0);
+INSERT INTO "navtree_node" VALUES(1,0,'Default Views',NULL,0,5000000);
+CREATE TABLE navtree_node_to_role (
+  node_id integer NOT NULL,
+  role varchar(64) NOT NULL,
+  PRIMARY KEY (node_id, role),
+  FOREIGN KEY (node_id) REFERENCES navtree_node(id) ON DELETE CASCADE ON UPDATE CASCADE,
+  FOREIGN KEY (role) REFERENCES role(role) ON DELETE CASCADE ON UPDATE CASCADE
+);
+CREATE TABLE request (
+  id INTEGER PRIMARY KEY NOT NULL,
+  user_id integer,
+  timestamp timestamp NOT NULL DEFAULT current_timestamp,
+  client_ip varchar(16) NOT NULL,
+  client_hostname varchar(255),
+  uri varchar(512) NOT NULL,
+  method varchar(8) NOT NULL,
+  user_agent varchar(1024),
+  referer varchar(512),
+  serialized_request text,
+  FOREIGN KEY (user_id) REFERENCES user(id) ON DELETE CASCADE ON UPDATE CASCADE
+);
+CREATE TABLE role (
+  id INTEGER PRIMARY KEY NOT NULL,
+  role varchar(64) NOT NULL,
+  description varchar(255) NOT NULL
+);
+INSERT INTO "role" VALUES(1,'administrator','Full Control');
+CREATE TABLE saved_state (
+  id INTEGER PRIMARY KEY NOT NULL,
+  title varchar(255) NOT NULL,
+  subtitle varchar(1024),
+  node_id integer,
+  user_id integer,
+  ordering integer NOT NULL DEFAULT 500001,
+  iconcls varchar(255),
+  url varchar(255) NOT NULL,
+  params text,
+  state_data text,
+  FOREIGN KEY (node_id) REFERENCES navtree_node(id) ON DELETE CASCADE ON UPDATE CASCADE,
+  FOREIGN KEY (user_id) REFERENCES user(id) ON DELETE CASCADE ON UPDATE CASCADE
+);
+INSERT INTO "saved_state" VALUES(1,'Messages',NULL,1,1,2499999,'icon-mail-earths','/main/db/schema_mail_message','{}','{"columns":{"___open_action_col":{"width":30,"hidden":true},"id":{"width":10,"hidden":true},"uid":{"width":10,"hidden":true},"ordering":{"width":10,"hidden":true},"sha1":{"width":10,"hidden":true},"sha1__view_link":{"width":40,"hidden":false},"sha1__mime_attribute__date":{"width":128,"hidden":false},"sha1__mime_attribute__from_addr":{"width":140,"hidden":false},"sha1__mime_attribute__subject":{"width":277,"hidden":false},"sha1__virtual_size":{"width":68,"hidden":false},"mailbox":{"width":125,"hidden":false},"folder":{"width":126,"hidden":false},"sha1__sha1":{"width":10,"hidden":true},"mailbox__name":{"width":10,"hidden":true},"mailbox__id":{"width":10,"hidden":true},"folder__name":{"width":10,"hidden":true},"folder__id":{"width":10,"hidden":true},"sha1__content":{"width":10,"hidden":true},"sha1__parsed":{"width":10,"hidden":true},"sha1__parse_error":{"width":10,"hidden":true},"sha1__direct_children":{"width":10,"hidden":true},"sha1__all_children":{"width":10,"hidden":true},"sha1__actual_size":{"width":10,"hidden":true},"sha1__mime_attribute":{"width":10,"hidden":true},"sha1__mail_messages":{"width":10,"hidden":true},"sha1__child_objects":{"width":10,"hidden":true},"sha1__mime_recipients":{"width":10,"hidden":true},"sha1__mime_headers":{"width":10,"hidden":true},"sha1__parent_objects":{"width":10,"hidden":true},"mailbox__realm":{"width":10,"hidden":true},"mailbox__description":{"width":10,"hidden":true},"mailbox__mail_folders":{"width":10,"hidden":true},"mailbox__mail_messages":{"width":10,"hidden":true},"folder__ordering":{"width":10,"hidden":true},"folder__parent":{"width":10,"hidden":true},"folder__mailbox":{"width":10,"hidden":true},"folder__mail_folders":{"width":10,"hidden":true},"folder__mail_messages":{"width":10,"hidden":true},"sha1__mime_attribute__sha1":{"width":10,"hidden":true},"sha1__mime_attribute__type":{"width":10,"hidden":true},"sha1__mime_attribute__subtype":{"width":10,"hidden":true},"sha1__mime_attribute__message_id":{"width":10,"hidden":true},"sha1__mime_attribute__debug_structure":{"width":10,"hidden":true},"sha1__mime_attribute__row_ts":{"width":10,"hidden":true}},"column_order":["___open_action_col","id","uid","ordering","sha1","sha1__view_link","sha1__mime_attribute__date","sha1__mime_attribute__from_addr","sha1__mime_attribute__subject","sha1__virtual_size","mailbox","folder","sha1__sha1","mailbox__name","mailbox__id","folder__name","folder__id","sha1__content","sha1__parsed","sha1__parse_error","sha1__direct_children","sha1__all_children","sha1__actual_size","sha1__mime_attribute","sha1__mail_messages","sha1__child_objects","sha1__mime_recipients","sha1__mime_headers","sha1__parent_objects","mailbox__realm","mailbox__description","mailbox__mail_folders","mailbox__mail_messages","folder__ordering","folder__parent","folder__mailbox","folder__mail_folders","folder__mail_messages","sha1__mime_attribute__sha1","sha1__mime_attribute__type","sha1__mime_attribute__subtype","sha1__mime_attribute__message_id","sha1__mime_attribute__debug_structure","sha1__mime_attribute__row_ts"],"sort":null,"pageSize":25,"quickSearchCheckIndexes":["sha1__mime_attribute__from_addr","sha1__mime_attribute__subject","sha1__content"],"quicksearch_mode":"like","custom_headers":{"sha1__mime_attribute__from_addr":"From","sha1__view_link":"&#160;","sha1__virtual_size":"Size","sha1__mime_attribute__subject":"Subject","mailbox":"Mailbox","folder":"Folder","sha1__mime_attribute__date":"Date"}}');
+INSERT INTO "saved_state" VALUES(2,'Mailboxes',NULL,1,1,6249999,'icon-database-table','/main/db/schema_mailbox','{}','{"columns":{"___open_action_col":{"width":10,"hidden":true},"id":{"width":22,"hidden":false},"realm":{"width":10,"hidden":true},"name":{"width":94,"hidden":false},"mail_messages":{"width":147,"hidden":false},"mail_folders":{"width":121,"hidden":false},"description":{"width":253,"hidden":false},"mail_folders__id":{"width":10,"hidden":true},"mail_folders__ordering":{"width":10,"hidden":true},"mail_folders__name":{"width":10,"hidden":true},"mail_folders__parent":{"width":10,"hidden":true},"mail_folders__mailbox":{"width":10,"hidden":true},"mail_folders__mail_folders":{"width":10,"hidden":true},"mail_folders__mail_messages":{"width":10,"hidden":true},"mail_messages__id":{"width":10,"hidden":true},"mail_messages__uid":{"width":10,"hidden":true},"mail_messages__ordering":{"width":10,"hidden":true},"mail_messages__sha1":{"width":10,"hidden":true},"mail_messages__mailbox":{"width":10,"hidden":true},"mail_messages__folder":{"width":10,"hidden":true}},"column_order":["___open_action_col","id","realm","name","mail_messages","mail_folders","description","mail_folders__id","mail_folders__ordering","mail_folders__name","mail_folders__parent","mail_folders__mailbox","mail_folders__mail_folders","mail_folders__mail_messages","mail_messages__id","mail_messages__uid","mail_messages__ordering","mail_messages__sha1","mail_messages__mailbox","mail_messages__folder"],"sort":null,"pageSize":25,"quickSearchCheckIndexes":["name","description"],"quicksearch_mode":"like","custom_headers":{"id":"Id","name":"Name","description":"Description","mail_folders":"Folders","mail_messages":"Messages"}}');
+INSERT INTO "saved_state" VALUES(3,'Folders',NULL,1,1,5000000,'icon-folders','/main/db/schema_mail_folder','{}','{"columns":{"___open_action_col":{"width":10,"hidden":true},"id":{"width":10,"hidden":true},"ordering":{"width":10,"hidden":true},"name":{"width":120,"hidden":false},"mail_messages":{"width":135,"hidden":false},"mail_folders":{"width":102,"hidden":false},"parent":{"width":93,"hidden":false},"mailbox":{"width":125,"hidden":false},"parent__name":{"width":10,"hidden":true},"parent__id":{"width":10,"hidden":true},"mailbox__name":{"width":10,"hidden":true},"mailbox__id":{"width":10,"hidden":true},"mail_folders__id":{"width":10,"hidden":true},"mail_folders__ordering":{"width":10,"hidden":true},"mail_folders__name":{"width":10,"hidden":true},"mail_folders__parent":{"width":10,"hidden":true},"mail_folders__mailbox":{"width":10,"hidden":true},"mail_folders__mail_folders":{"width":10,"hidden":true},"mail_folders__mail_messages":{"width":10,"hidden":true},"parent__ordering":{"width":10,"hidden":true},"parent__parent":{"width":10,"hidden":true},"parent__mailbox":{"width":10,"hidden":true},"parent__mail_folders":{"width":10,"hidden":true},"parent__mail_messages":{"width":10,"hidden":true},"mail_messages__id":{"width":10,"hidden":true},"mail_messages__uid":{"width":10,"hidden":true},"mail_messages__ordering":{"width":10,"hidden":true},"mail_messages__sha1":{"width":10,"hidden":true},"mail_messages__mailbox":{"width":10,"hidden":true},"mail_messages__folder":{"width":10,"hidden":true},"mailbox__realm":{"width":10,"hidden":true},"mailbox__description":{"width":10,"hidden":true},"mailbox__mail_folders":{"width":10,"hidden":true},"mailbox__mail_messages":{"width":10,"hidden":true}},"column_order":["___open_action_col","id","ordering","name","mail_messages","mail_folders","parent","mailbox","parent__name","parent__id","mailbox__name","mailbox__id","mail_folders__id","mail_folders__ordering","mail_folders__name","mail_folders__parent","mail_folders__mailbox","mail_folders__mail_folders","mail_folders__mail_messages","parent__ordering","parent__parent","parent__mailbox","parent__mail_folders","parent__mail_messages","mail_messages__id","mail_messages__uid","mail_messages__ordering","mail_messages__sha1","mail_messages__mailbox","mail_messages__folder","mailbox__realm","mailbox__description","mailbox__mail_folders","mailbox__mail_messages"],"sort":null,"pageSize":25,"quickSearchCheckIndexes":["name","parent","mailbox"],"quicksearch_mode":"like","custom_headers":{"name":"Name","mail_folders":"Sub Folders","parent":"Parent Folder","mail_messages":"Messages","mailbox":"Mailbox"}}');
+CREATE TABLE session (
+  id varchar NOT NULL,
+  session_data text,
+  expires integer,
+  expires_ts datetime,
+  user_id integer,
+  PRIMARY KEY (id),
+  FOREIGN KEY (user_id) REFERENCES user(id) ON DELETE CASCADE ON UPDATE CASCADE
+);
+CREATE TABLE user (
+  id INTEGER PRIMARY KEY NOT NULL,
+  username varchar(32) NOT NULL,
+  password varchar(255),
+  full_name varchar(255),
+  last_login_ts datetime,
+  disabled tinyint NOT NULL DEFAULT 0,
+  disabled_ts datetime
+);
+INSERT INTO "user" VALUES(1,'admin','pass',NULL,'2013-06-25 12:55:26',0,NULL);
+CREATE TABLE user_to_role (
+  username varchar(32) NOT NULL,
+  role varchar(64) NOT NULL,
+  PRIMARY KEY (username, role),
+  FOREIGN KEY (role) REFERENCES role(role) ON DELETE CASCADE ON UPDATE CASCADE,
+  FOREIGN KEY (username) REFERENCES user(username) ON DELETE CASCADE ON UPDATE CASCADE
+);
+INSERT INTO "user_to_role" VALUES('admin','administrator');
+CREATE INDEX default_view_idx_view_id ON default_view (view_id);
+CREATE INDEX navtree_node_idx_pid ON navtree_node (pid);
+CREATE INDEX navtree_node_to_role_idx_node_id ON navtree_node_to_role (node_id);
+CREATE INDEX navtree_node_to_role_idx_role ON navtree_node_to_role (role);
+CREATE INDEX request_idx_user_id ON request (user_id);
+CREATE UNIQUE INDEX role02 ON role (role);
+CREATE INDEX saved_state_idx_node_id ON saved_state (node_id);
+CREATE INDEX saved_state_idx_user_id ON saved_state (user_id);
+CREATE INDEX session_idx_user_id ON session (user_id);
+CREATE UNIQUE INDEX username ON user (username);
+CREATE INDEX user_to_role_idx_role ON user_to_role (role);
+CREATE INDEX user_to_role_idx_username ON user_to_role (username);
+COMMIT;

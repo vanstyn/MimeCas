@@ -1,0 +1,5 @@
+# Dump the CoreSchema to default:
+echo '.dump' | sqlite3 rapidapp_coreschema.db > sql/rapidapp_coreschema.dump
+
+# Load the default CoreSchema:
+sqlite3 rapidapp_coreschema.db < sql/rapidapp_coreschema.dump
