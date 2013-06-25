@@ -3,7 +3,7 @@ use Moose;
 use namespace::autoclean;
 
 use Catalyst::Runtime 5.80;
-use RapidApp 0.99005;
+use RapidApp 0.99006;
 
 use RapidApp::Include qw(sugar perlutil);
 
@@ -26,8 +26,6 @@ __PACKAGE__->config(
   name => 'MimeCas',
   # Disable deprecated behavior needed by old applications
   disable_component_resolution_regex_fallback => 1,
-  
-  extjs_dir => '/root/RapidApp_Demos/ext-3.4.1',
   
   'Plugin::AutoAssets' => { assets => [
     {
