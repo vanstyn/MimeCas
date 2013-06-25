@@ -19,7 +19,7 @@ push @plugins, qw(RapidApp::NavCore);
 
 use Catalyst;
 
-our $VERSION = '0.05';
+our $VERSION = '0.10';
 our $TITLE = "MimeCas v" . $VERSION;
 
 __PACKAGE__->config(
