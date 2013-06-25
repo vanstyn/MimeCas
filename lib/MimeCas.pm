@@ -170,7 +170,7 @@ __PACKAGE__->config(
             title => 'Mime Recipient',
             title_multi => 'Mime Recipients',
             iconCls => 'icon-user',
-            multiIconCls => 'icon-users',
+            multiIconCls => 'icon-group',
           
           }
 
