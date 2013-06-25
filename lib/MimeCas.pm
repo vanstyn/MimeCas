@@ -87,13 +87,17 @@ __PACKAGE__->config(
         },
         virtual_columns => {
           MimeObject => {
-             # TODO: this is MySQL-specific:
-             #view_link => {
-             #   data_type => "varchar",
-             #   is_nullable => 0,
-             #   size => 255,
-             #   sql => 'SELECT CONCAT("<a target=\"_blank\" href=\"/mime/view/",CONCAT(self.sha1,"\">Open</a>"))'
-             # },
+             view_link => {
+                data_type => "varchar",
+                is_nullable => 0,
+                size => 255,
+                
+                # MySQL syntax:
+                #sql => 'SELECT CONCAT("<a target=\"_blank\" href=\"/mime/view/",CONCAT(self.sha1,"\">Open</a>"))'
+                
+                #SQLite syntax:
+                sql => q~SELECT '<a target="_blank" href="/mime/view/' || self.sha1 || '">Open</a>'~
+              },
           }
         },
         TableSpecs => {

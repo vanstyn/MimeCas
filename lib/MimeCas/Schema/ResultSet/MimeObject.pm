@@ -30,7 +30,7 @@ sub store_mime {
   my %create = ();
   
   # TMP FOR MYSQL - set max packet to 500MB
-  $self->schema->storage->dbh->do('SET GLOBAL max_allowed_packet=' . 500 * 1024 * 1024);
+  #$self->schema->storage->dbh->do('SET GLOBAL max_allowed_packet=' . 500 * 1024 * 1024);
   
   my ($MIME, $parse_error, $died);
   if(ref $data) {
@@ -136,7 +136,7 @@ sub _find_or_create_mime_row {
     };
     
     # Why????
-    $self->schema->storage->dbh->do('SET FOREIGN_KEY_CHECKS=0;');
+    #$self->schema->storage->dbh->do('SET FOREIGN_KEY_CHECKS=0;');
     
     ## Call in void context to prevent trying to select the row back in:
     $self->populate([$create]);

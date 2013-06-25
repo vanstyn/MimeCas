@@ -7,7 +7,7 @@ __PACKAGE__->config(
     
     connect_info => {
         dsn => 'dbi:SQLite:dbname=mime_cas.db',
-        on_connect_call => 'use_foreign_keys',
+        #on_connect_call => 'use_foreign_keys',
         quote_names => 1,
     }
 );
