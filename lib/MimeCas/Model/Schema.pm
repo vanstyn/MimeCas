@@ -2,11 +2,16 @@ package MimeCas::Model::Schema;
 use Moose;
 extends 'Catalyst::Model::DBIC::Schema';
 
+use Path::Class qw(file);
+use Catalyst::Utils;
+
+my $db = file(Catalyst::Utils::home('MimeCas'),'mime_cas.db');
+
 __PACKAGE__->config(
     schema_class => 'MimeCas::Schema',
     
     connect_info => {
-        dsn => 'dbi:SQLite:dbname=mime_cas.db',
+        dsn => 'dbi:SQLite:dbname=' . $db,
         #on_connect_call => 'use_foreign_keys',
         quote_names => 1,
     }
@@ -15,7 +20,7 @@ __PACKAGE__->config(
 # Auto-deploy:
 before 'setup' => sub {
   my $self = shift;
-  return if (-f 'mime_cas.db');
+  return if (-f $db);
   $self->schema_class->connect($self->connect_info->{dsn})->deploy;
 };
 
