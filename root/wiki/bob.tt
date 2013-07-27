@@ -1,0 +1,30 @@
+<title class="icon-user">Bob</title>
+
+<div id="ext-gen362" class="ra-doc">
+
+<h1 id="ext-gen862">This is Bob123</h1>
+
+
+
+<p id="ext-gen321">sdvfdfv<br></p>This is an example appli front-end for the "MimeCas" DBIC schema using the new "RapidApp" framework. <br><br>The database has been loaded with some samp<br><br><br><img id="ext-gen950" src="http://magnetron:3000/simplecas/fetch_content/6f4ffff2aabc8ec4e1d6426a0c1624760ef66128/Peas%20On%20Earth.jpg" height="125" width="63"><br><br>le data (messages from various Perl-basedhrth  in order to showcase tthrth some of the functionality of the framework.
+
+<p>BILLY BOB!!!!!!!!!!</p>
+
+<p>Click the items on the left to expase, or, start here:</p>
+
+<ul><li><b>
+<a href="#!/main/db/schema_mailbox">Browse Mailboxes (Lists)</a>
+</b>
+</li></ul>
+</div>
+
+
+
+<hr>
+<div style="margin:20px; padding:5px; border: 1px solid;">
+[% INCLUDE templates/dashboard.tt %]
+</div>
+
+Back in BOB!!
+
+[% INCLUDE wiki/apple.tt %]<br><br><br>

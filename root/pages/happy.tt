@@ -1,0 +1,11 @@
+<head>
+<title class="icon-user" style="color:red">Happy!</title>
+</head>
+
+<h1> Happy!!!</h1>
+
+
+
+[% inline_file('rapidapp/about_rapidapp.tt') %]
+
+[% inline_file('README.md') %]

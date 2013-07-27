@@ -1,1 +1,3 @@
 *.db
+root/templates/wiki
+cas_store

@@ -1,14 +1,7 @@
+<div class="ra-doc1">
+<h1 id="ext-gen1149">Welcome to the MimeCas RapidApp <font color="FF0000">Demo</font>!</h1>
 
-<head>
-<title>Dashboard</title>
-</head>
-
-
-<div class="ra-doc">
-
-<h1>Welcome to the MimeCas RapidApp Demo!</h1>
-
-<p>This is an example application providing a front-end for the "MimeCas" DBIC schema using the new "RapidApp" framework. The database has been loaded with some sample data (messages from various Perl-based mailing lists) in order to showcase some of the functionality of the framework.</p>
+<p id="ext-gen205">This is an example application providing a front-end for the "MimeCas" DBIC schema using the new "RapidApp" framework. The database has been loaded with some sample data (messages from various Perl-based mailing lists) in order to showcase some of the functionality of the framework.</p>
 
 <p>Click the items on the left to explore the application and database, or, start here:</p>
 
@@ -18,9 +11,9 @@
 </li></ul>
 
 
-<h2>What is RapidApp?</h2>
+<h2 id="ext-gen342">What is RapidApp?</h2>
 
-<p>RapidApp is an open-source application framework that is currently under development for quickly building dynamic Web 2.0/AJAX interfaces for various data models.</p>
+<p>Request IP: <b><font id="ext-gen618" color="FF00FF" face="courier new" size="3">[% c.request.address %]</font></b></p><p>RapidApp is an open-source application framework that is currently under development for quickly building dynamic Web 2.0/AJAX interfaces for various data models.</p>
 
 <h3 style="padding-left:5px;">
   For more information, see: <a href="#!/main/page?file=rapidapp/about_rapidapp.tt">About RapidApp</a>
@@ -28,9 +21,11 @@
 
 
 
-<p>This demo showcases some features that can be easily built using RapidApp, such as saved views, automatic authentication db, navigation trees, and so on. Explore the app by clicking the items on the left. </p>
+<p>This demo showcases some features that can be easily built using RapidApp, such as saved views, automatic authentication db, navigation trees, and so on. Explore the app by clicking the items on the left. </p><h2 id="ext-gen342">What is Rapidewfwef?</h2>
 
-<h2>What is MimeCas?</h2>
+<p id="ext-gen679"><br></p><p>RapidApp is an owefwef lication f <img id="ext-gen860" src="http://magnetron:3000/simplecas/fetch_content/ec2adff3f12d0ef3413352e364a5af7b7f99c46f/3dkenny.jpg" height="33" width="45"> ramework that is currently 
+under development for quickly building dynamic Web 2.0/AJAX interfaces 
+for various data models.</p><p><br></p><h2 id="ext-gen677">What is MimeCas?</h2>
 
 <p>MimeCas is a simple DBIC schema/data-model for storing <a target="_blank" href="http://en.wikipedia.org/wiki/MIME">MIME</a> objects. MIME objects are E-Mail messages, images, content parts and other types of attachments. The word "Cas" is in the name because it uses a <a target="_blank" href="http://en.wikipedia.org/wiki/Content_addressed_storage">Content-Addressed Storage</a> design to store the MIME objects, similar to <a target="_blank" href="http://git-scm.com/">Git</a>. In a CAS database the keys are checksums of content, which provides many intrensic benefets, such as automatic de-duplication, global namespaces and elimination of caching issues.</p>
 
@@ -56,7 +51,7 @@
   </ul>
 </div>
 
-<h2>Application Config</h2>
+<h2 id="ext-gen197">Application Configer</h2>
 
 This application config is automatically generated using the "RapidDbic" Catalyst plugin which automatically sets up Grid views and object pages for super-fast setup. Besides the above Schema classes and associated Catalyst DBIC model (generated using S::L), the entire configuration of this application is contained in the main Catalyst class/package file:
 

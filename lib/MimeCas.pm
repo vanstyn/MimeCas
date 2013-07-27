@@ -3,9 +3,13 @@ use Moose;
 use namespace::autoclean;
 
 use Catalyst::Runtime 5.80;
-use RapidApp 0.99006;
+use RapidApp 0.99012;
+use Catalyst::Controller::MIME 0.02;
+use Email::Date 1.103;
 
 use RapidApp::Include qw(sugar perlutil);
+
+#use Carp::Always;
 
 my @plugins = qw(
     -Debug
@@ -27,6 +31,19 @@ __PACKAGE__->config(
   # Disable deprecated behavior needed by old applications
   disable_component_resolution_regex_fallback => 1,
   
+  'Controller::RapidApp::Template' => {
+    #auto_editable => 1,
+    access_params => {
+      writable => 1,
+      creatable => 1,
+      deletable => 1,
+      #writable_regex => '^wiki',
+      #creatable_regex => '^wiki',
+      ##admin_tpl_regex => '^wiki_admin',
+      #non_admin_tpl_regex => '^wiki',
+    }
+  },
+  
   'Plugin::AutoAssets' => { assets => [
     {
       controller => 'A::Img',
@@ -34,14 +51,23 @@ __PACKAGE__->config(
       include => 'root/static/images',
       allow_static_requests => 1
     
-    }
+    },
+    #{
+    #  controller => 'A::CSS::Scoped',
+    #  type => 'CSS',
+    #  include => 'root/static/reset.css',
+    #  allow_static_requests => 1,
+    #  scopify => ['div.scoped-reset', merge => ['html','body']]
+    #
+    #}
   ]},
   
 
   'Plugin::RapidApp::RapidDbic' => {
     title => $TITLE,
     nav_title => 'MIME Cas Store',
-    dashboard_template => 'templates/dashboard.tt',
+    #dashboard_template => 'templates/dashboard.tt',
+    dashboard_url => '/tple/dashboard.tt',
     page_view_dir => 'root/pages',
     #banner_template => 'templates/rapidapp/simple_auth_banner.tt',
     dbic_models => [
@@ -85,18 +111,18 @@ __PACKAGE__->config(
         },
         virtual_columns => {
           MimeObject => {
-             view_link => {
-                data_type => "varchar",
-                is_nullable => 0,
-                size => 255,
-                
-                # MySQL syntax:
-                #sql => 'SELECT CONCAT("<a target=\"_blank\" href=\"/mime/view/",CONCAT(self.sha1,"\">Open</a>"))'
-                
-                #SQLite syntax:
-                #sql => q~SELECT '<a target="_blank" href="/mime/view/' || self.sha1 || '">Open</a>'~
-                sql => q~SELECT '<a href="#!/mime/view/' || self.sha1 || '">Open</a>'~
-              },
+            view_link => {
+              data_type => "varchar",
+              is_nullable => 0,
+              size => 255,
+              
+              # MySQL syntax:
+              #sql => 'SELECT CONCAT("<a target=\"_blank\" href=\"/mime/view/",CONCAT(self.sha1,"\">Open</a>"))'
+              
+              #SQLite syntax:
+              #sql => q~SELECT '<a target="_blank" href="/mime/view/' || self.sha1 || '">Open</a>'~
+              sql => q~SELECT '<a href="#!/mime/view/' || self.sha1 || '">Open</a>'~
+            },
           }
         },
         TableSpecs => {
@@ -116,8 +142,8 @@ __PACKAGE__->config(
           Mailbox => {
             title => 'Mailbox',
             title_multi => 'Mailboxes',
-            iconCls => 'icon-database',
-            multiIconCls => 'icon-database-table',
+            iconCls => 'ra-icon-database',
+            multiIconCls => 'ra-icon-database-table',
             display_column => 'name'
           },
           MimeAttribute => {
@@ -168,8 +194,8 @@ __PACKAGE__->config(
           MimeRecipient => {
             title => 'Mime Recipient',
             title_multi => 'Mime Recipients',
-            iconCls => 'icon-user',
-            multiIconCls => 'icon-group',
+            iconCls => 'ra-icon-user',
+            multiIconCls => 'ra-icon-group',
           
           }
 

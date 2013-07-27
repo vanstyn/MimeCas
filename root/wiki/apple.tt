@@ -1,0 +1,83 @@
+
+
+<title style="color:darkred;" class="icon-apple">Apple</title>
+
+
+<style>
+
+.outer {
+  position: relative;
+}
+
+
+
+.inner {
+  position: absolute;
+  top: -5;
+  left: -5;
+  right: -5;
+  bottom: -5;
+  border-width: 1px;
+  border-style: dotted;
+  display:none;
+}
+
+.outer:hover .inner {
+  display: block;
+}
+
+.edit {
+  position: absolute;
+  top: -2;
+  right: -2;
+  height: 40px;
+  width: 40px;
+  opacity: 0.6;
+}
+
+.edit:hover {
+  cursor: pointer;
+  opacity: 1;
+}
+
+</style>
+
+
+
+
+
+
+<div class="ra-doc">
+
+<h1 id="ext-gen900">This is Apple!!</h1>
+
+<!--
+
+<div class="outer">
+
+<div class="inner">
+<div class="edit icon-edit-pictogram"></div>
+</div>
+
+-->
+
+<h1>This is a headinhg!</h1>
+
+<p>This is an example appli front-end for the "MimeCas" DBIC schema using the new "RapidApp" framework. The database has been loaded with some sample data (messages from various Perl-basedhrth  in order to showcase tthrth some of the functionality of the framework.</p>
+
+<p>Click the items on the left to expase, or, start here:</p>
+
+<ul><li><b>
+<a href="#!/main/db/schema_mailbox">Browse Mailboxes (Lists)</a>
+</b>
+</li></ul>
+</div>
+
+
+
+<hr>
+<div style="margin:20px; padding:5px; border: 1px solid;">
+[% INCLUDE templates/dashboard.tt %]
+</div>
+
+Back in Apple!!
