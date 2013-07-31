@@ -7,7 +7,10 @@
   'Contact'
 ] %]
 
-[% DEFAULT title = 'Bootstrap JustNav Example' %]
+[% DEFAULT 
+  title = 'Bootstrap JustNav Example' 
+  custom_css_href = "/assets/local/misc/static/bootstrap-examples/justified-nav/justified-nav.css"
+%]
 
 <!DOCTYPE html>
 <html lang="en">
@@ -23,7 +26,7 @@
     <link href="/assets/local/misc/static/bootstrap-examples/bootstrap/css/bootstrap.css" rel="stylesheet">
 
     <!-- Custom styles for this template -->
-    <link href="/assets/local/misc/static/bootstrap-examples/justified-nav/justified-nav.css" rel="stylesheet">
+    <link href="[% custom_css_href %]" rel="stylesheet">
   </head>
 
   <body>
