@@ -3,7 +3,7 @@ use Moose;
 use namespace::autoclean;
 
 use Catalyst::Runtime 5.80;
-use RapidApp 0.99012;
+use RapidApp 0.99013;
 use Catalyst::Controller::MIME 0.02;
 use Email::Date 1.103;
 
@@ -69,7 +69,10 @@ __PACKAGE__->config(
     nav_title => 'MIME Cas Store',
     #dashboard_template => 'templates/dashboard.tt',
     dashboard_url => '/tple/dashboard.tt',
-    page_view_dir => 'root/pages',
+    #page_view_dir => 'root/pages', #<-- depricated
+    
+    template_navtree_regex => '.',
+    
     #banner_template => 'templates/rapidapp/simple_auth_banner.tt',
     dbic_models => [
       'Schema',
