@@ -16,7 +16,7 @@
 <p>Request IP: <b><font id="ext-gen618" color="FF00FF" face="courier new" size="3">[% c.request.address %]</font></b></p><p>RapidApp is an open-source application framework that is currently under development for quickly building dynamic Web 2.0/AJAX interfaces for various data models.</p>
 
 <h3 style="padding-left:5px;">
-  For more information, see: <a href="#!/main/page?file=rapidapp/about_rapidapp.tt">About RapidApp</a>
+  For more information, see: <a href="/tpl/rapidapp/pages/about_rapidapp">About RapidApp</a>
 </h3>
 
 

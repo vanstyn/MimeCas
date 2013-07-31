@@ -125,7 +125,7 @@ __PACKAGE__->config(
               
               #SQLite syntax:
               #sql => q~SELECT '<a target="_blank" href="/mime/view/' || self.sha1 || '">Open</a>'~
-              sql => q~SELECT '<a href="#!/mime/view/' || self.sha1 || '">Open</a>'~
+              sql => q~SELECT '<a href="/mime/view/' || self.sha1 || '">Open</a>'~
             },
           }
         },
