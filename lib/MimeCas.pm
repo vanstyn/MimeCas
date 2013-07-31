@@ -37,6 +37,7 @@ __PACKAGE__->config(
       writable => 1,
       creatable => 1,
       deletable => 1,
+      external_tpl_regex => '^public\/',
       #writable_regex => '^wiki',
       #creatable_regex => '^wiki',
       ##admin_tpl_regex => '^wiki_admin',
