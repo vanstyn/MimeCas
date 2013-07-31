@@ -1,5 +1,32 @@
 [% WRAPPER public/bs/justnav/doc_wrapper.html %]
 
+[% SET sections = [
+  'Home',
+  'Projects',
+  'Services',
+  'Downloads',
+  'About',
+  'Contact'
+] %]
+
+[%# SET active_section = 'Home' %]
+
+<div class="masthead">
+  <h3 class="text-muted">Project name</h3>
+  <ul class="nav navbar-nav nav-justified">
+    [% FOREACH section IN sections %]
+      [% IF section == active_section %]
+        <li class="active"><a href="section/[% section %].html">[% section %]</a></li>
+      [% ELSE %]
+        <li><a href="section/[% section %].html">[% section %]</a></li>
+      [% END %]
+    [% END %]
+  </ul>
+</div>
+
+
+
+<!--
       <div class="masthead">
         <h3 class="text-muted">Project name</h3>
         <ul class="nav navbar-nav nav-justified">
@@ -11,6 +38,8 @@
           <li><a href="#">Contact</a></li>
         </ul>
       </div>
+-->
+
 
       <!-- Jumbotron -->
       <div class="jumbotron">
