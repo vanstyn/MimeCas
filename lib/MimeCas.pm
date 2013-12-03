@@ -24,7 +24,7 @@ push @plugins, qw(RapidApp::CoreSchemaAdmin);
 
 use Catalyst;
 
-our $VERSION = '0.11';
+our $VERSION = '0.12';
 our $TITLE = "MimeCas v" . $VERSION;
 
 __PACKAGE__->config(
@@ -36,6 +36,7 @@ __PACKAGE__->config(
     title => $TITLE,
     nav_title => 'MIME Cas Store',
     dashboard_url => '/tple/dashboard.tt',
+    banner_template => 'banner.html',
     template_navtree_regex => '.', #<-- ALL templates, including rapidapp built-ins
   },
   
@@ -53,6 +54,7 @@ __PACKAGE__->config(
   },
   
   'Plugin::AutoAssets' => { assets => [
+    # Example manual asset controller
     {
       controller => 'A::Img',
       type => 'IconSet',
