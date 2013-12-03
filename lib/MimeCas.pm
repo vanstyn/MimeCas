@@ -3,7 +3,7 @@ use Moose;
 use namespace::autoclean;
 
 use Catalyst::Runtime 5.80;
-use RapidApp 0.99012;
+use RapidApp 0.99024;
 use Catalyst::Controller::MIME 0.02;
 use Email::Date 1.103;
 
@@ -23,13 +23,20 @@ push @plugins, qw(RapidApp::NavCore);
 
 use Catalyst;
 
-our $VERSION = '0.10';
+our $VERSION = '0.11';
 our $TITLE = "MimeCas v" . $VERSION;
 
 __PACKAGE__->config(
   name => 'MimeCas',
   # Disable deprecated behavior needed by old applications
   disable_component_resolution_regex_fallback => 1,
+  
+  'Plugin::RapidApp::TabGui' => {
+    title => $TITLE,
+    nav_title => 'MIME Cas Store',
+    dashboard_url => '/tple/dashboard.tt',
+    #template_navtree_regex => $tpl_regex,
+  },
   
   'Controller::RapidApp::Template' => {
     #auto_editable => 1,
@@ -64,12 +71,12 @@ __PACKAGE__->config(
   
 
   'Plugin::RapidApp::RapidDbic' => {
-    title => $TITLE,
-    nav_title => 'MIME Cas Store',
-    #dashboard_template => 'templates/dashboard.tt',
-    dashboard_url => '/tple/dashboard.tt',
-    page_view_dir => 'root/pages',
-    #banner_template => 'templates/rapidapp/simple_auth_banner.tt',
+    
+    # TODO: 'page_view_dir' is no longer a thing, but I'm leaving
+    # this comment as a reminder to come back for the content
+    # that was hosted here for demos...
+    #page_view_dir => 'root/pages',
+
     dbic_models => [
       'Schema',
       'RapidApp::CoreSchema'
