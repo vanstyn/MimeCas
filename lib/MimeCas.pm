@@ -20,6 +20,7 @@ my @plugins = qw(
 push @plugins, qw(RapidApp::AuthCore);
 push @plugins, qw(RapidApp::NavCore);
 #push @plugins, qw(RapidApp::RequestLogger);
+push @plugins, qw(RapidApp::CoreSchemaAdmin);
 
 use Catalyst;
 
@@ -35,7 +36,7 @@ __PACKAGE__->config(
     title => $TITLE,
     nav_title => 'MIME Cas Store',
     dashboard_url => '/tple/dashboard.tt',
-    #template_navtree_regex => $tpl_regex,
+    template_navtree_regex => '.', #<-- ALL templates, including rapidapp built-ins
   },
   
   'Controller::RapidApp::Template' => {
@@ -79,37 +80,17 @@ __PACKAGE__->config(
 
     dbic_models => [
       'Schema',
-      'RapidApp::CoreSchema'
+      #'RapidApp::CoreSchema'
     ],
     hide_fk_columns => 1,
     configs => {
-      'RapidApp::CoreSchema' => {
-        grid_params => {
-          '*defaults' => {
-            updatable_colspec => ['*'],
-            creatable_colspec => ['*'],
-            destroyable_relspec => ['*'],
-            #cache_total_count => 0,
-            #plugins => ['grid-edit-advanced-config']
-          },
-          Role => {
-            no_page => 1,
-            persist_immediately => {
-              create => \0,
-              update => \0,
-              destroy	=> \0
-            },
-            extra_extconfig => { use_add_form => \0 }
-          }
-        }
-      },
-    
       Schema => {
         grid_params => {
           '*defaults' => {
             include_colspec => ['*', '*.*'],
+            destroyable_relspec => ['*'], #<-- allow delete
             #cache_total_count => 0 #<-- turn this off while lots of data is changing
-            plugins => ['grid-custom-headers']
+            
           },
           MailMessage => {
             include_colspec => ['*', '*.*', 'sha1.mime_attribute.*'],
